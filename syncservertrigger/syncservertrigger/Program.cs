@@ -4,91 +4,76 @@ namespace syncservertrigger
 {
     class Program
     {
+        internal enum Commands
+        {
+            // User commands
+            Help,
+            Install,
+            Uninstall,
+            Server,
+            RepoFilter,
+            RepoMap,
+            WarnEmail,
+
+            // Command to be executed by Plastic SCM
+            Trigger,
+
+            // Command to be executed by syncservertrigger itself
+            Execute
+        }
+
         static void Main(string[] args)
         {
-            Arguments arguments = Arguments.Parse(args);
+            if (args.Length == 0)
+            {
+                Console.Error.WriteLine(HELP);
+                return;
+            }
 
-            if (arguments.Command == Arguments.Commands.Help)
+            Commands command = ParseCommand(args[0]);
+
+            if (command == Commands.Help)
             {
                 Console.Error.Write(HELP);
                 return;
             }
         }
 
-        class Arguments
+        static Commands ParseCommand(string command)
         {
-            Arguments() { }
-
-            internal static Arguments Parse(string[] args)
-            {
-                Arguments result = new Arguments();
-
-                if (args.Length == 0)
-                {
-                    result.Command = Commands.Help;
-                    return result;
-                }
-
-                result.Command = ParseCommand(args[0]);
-                return result;
-            }
-
-            static Commands ParseCommand(string command)
-            {
-                if (AreEqual(command, "help") || AreEqual(command, "--help"))
-                    return Commands.Help;
-
-                if (AreEqual(command, "install"))
-                    return Commands.Install;
-
-                if (AreEqual(command, "uninstall"))
-                    return Commands.Uninstall;
-
-                if (AreEqual(command, "server"))
-                    return Commands.Server;
-
-                if (AreEqual(command, "repofilter"))
-                    return Commands.RepoFilter;
-
-                if (AreEqual(command, "repomap"))
-                    return Commands.RepoMap;
-
-                if (AreEqual(command, "warnemail"))
-                    return Commands.WarnEmail;
-
-                if (AreEqual(command, "trigger"))
-                    return Commands.Trigger;
-
-                if (AreEqual(command, "execute"))
-                    return Commands.Execute;
-
+            if (AreEqual(command, "help") || AreEqual(command, "--help"))
                 return Commands.Help;
-            }
 
-            static bool AreEqual(string left, string right)
-            {
-                return StringComparer.InvariantCultureIgnoreCase.Compare(left, right) == 0;
-            }
+            if (AreEqual(command, "install"))
+                return Commands.Install;
 
-            internal Commands Command { get; private set; }
+            if (AreEqual(command, "uninstall"))
+                return Commands.Uninstall;
 
-            internal enum Commands
-            {
-                // User commands
-                Help,
-                Install,
-                Uninstall,
-                Server,
-                RepoFilter,
-                RepoMap,
-                WarnEmail,
+            if (AreEqual(command, "server"))
+                return Commands.Server;
 
-                // Command to be executed by Plastic SCM
-                Trigger,
+            if (AreEqual(command, "repofilter"))
+                return Commands.RepoFilter;
 
-                // Command to be executed by syncservertrigger itself
-                Execute
-            }
+            if (AreEqual(command, "repomap"))
+                return Commands.RepoMap;
+
+            if (AreEqual(command, "warnemail"))
+                return Commands.WarnEmail;
+
+            if (AreEqual(command, "trigger"))
+                return Commands.Trigger;
+
+            if (AreEqual(command, "execute"))
+                return Commands.Execute;
+
+            return Commands.Help;
+        }
+
+        static bool AreEqual(string left, string right)
+        {
+            return StringComparer.InvariantCultureIgnoreCase.Compare(left, right) == 0;
         }
 
         const string HELP =
