@@ -8,5 +8,10 @@ namespace Codice.SyncServerTrigger
         {
             return Assembly.GetCallingAssembly().Location;
         }
+
+        internal static bool CheckServerSpec(string serverSpec)
+        {
+            return true; // TODO
+        }
     }
 }

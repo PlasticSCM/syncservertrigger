@@ -19,6 +19,20 @@ namespace Codice.SyncServerTrigger.Commands
             string srcServer = args[1];
             string dstServer = args[2];
 
+            if (!Utils.CheckServerSpec(srcServer))
+            {
+                Console.Error.WriteLine(
+                    "The server spec is not correct: {0}", srcServer);
+                Environment.Exit(1);
+            }
+
+            if (!Utils.CheckServerSpec(dstServer))
+            {
+                Console.Error.WriteLine(
+                    "The server spec is not correct: {0}", dstServer);
+                Environment.Exit(1);
+            }
+
             Console.WriteLine(
                 "Installing the necessary triggers on server {1}:{0}" +
                 "* after-checkin{0}" +
