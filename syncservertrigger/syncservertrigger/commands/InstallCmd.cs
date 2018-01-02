@@ -2,6 +2,14 @@
 
 namespace Codice.SyncServerTrigger.Commands
 {
+    internal static class TriggerNames
+    {
+        internal const string AfterCi = "sync afterci";
+        internal const string AfterReplication = "sync afterreplication";
+        internal const string AfterMkLabel = "sync aftermklabel";
+        internal const string AfterChAtt = "sync afterchatt";
+    }
+
     internal class InstallCmd : ICmd
     {
         public string Help { get { return HELP; } }
@@ -54,17 +62,16 @@ namespace Codice.SyncServerTrigger.Commands
                 "Using syncservertrigger located at {0}.",
                 executablePath);
 
-            if (!InstallTrigger("after-checkin", "sync afterci", executablePath, srcServer)
-                || !InstallTrigger("after-replicationwrite", "sync-afterreplica", executablePath, srcServer)
-                || !InstallTrigger("after-mklabel", "sync aftermklabel", executablePath, srcServer)
-                || !InstallTrigger("after-chattvalue", "sync afterchattval", executablePath, srcServer))
+            if (!InstallTrigger("after-checkin", TriggerNames.AfterCi, executablePath, srcServer)
+                || !InstallTrigger("after-replicationwrite", TriggerNames.AfterReplication, executablePath, srcServer)
+                || !InstallTrigger("after-mklabel", TriggerNames.AfterMkLabel, executablePath, srcServer)
+                || !InstallTrigger("after-chattvalue", TriggerNames.AfterChAtt, executablePath, srcServer))
             {
                 Environment.Exit(1);
             }
 
             Console.WriteLine(
-                "Triggers successfully installed! Check 'cm listtriggers --server={0}'.",
-                srcServer);
+                "Triggers successfully installed in {0}!", srcServer);
         }
 
         static bool InstallTrigger(
@@ -79,7 +86,9 @@ namespace Codice.SyncServerTrigger.Commands
             string cmdLine = GetCommandLine(
                 triggerType, triggerName, executablePath, server);
 
-            Console.WriteLine("Installing '{0}' trigger.", triggerType);
+            Console.WriteLine("Installing trigger '{0}' (type '{1}').",
+                triggerName,
+                triggerType);
 
             result = CmdRunner.CmdRunner.ExecuteCommandWithResult(
                 cmdLine,
@@ -93,19 +102,22 @@ namespace Codice.SyncServerTrigger.Commands
 
             WriteError(
                 cmdLine,
-                string.IsNullOrEmpty(stdOut) ? string.Empty : stdOut,
-                string.IsNullOrEmpty(stdErr) ? string.Empty : stdErr);
+                server,
+                stdOut,
+                stdErr);
 
             return false;
         }
 
-        static void WriteError(string commandLine, string output, string error)
+        static void WriteError(
+            string commandLine, string server, string output, string error)
         {
             Console.Error.WriteLine(
-                "Installing a trigger failed.{0}" +
-                "Command line: '{1}'{0}" +
-                "cm stdout: {2}{0}" +
-                "cm stderr: {3}",
+                "Installing a trigger in {1} failed.{0}" +
+                "Command line: '{2}'{0}" +
+                "cm stdout: {3}{0}" +
+                "cm stderr: {4}",
+                server,
                 Environment.NewLine,
                 commandLine,
                 output,
