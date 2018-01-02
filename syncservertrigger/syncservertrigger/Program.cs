@@ -35,9 +35,11 @@ namespace Codice.SyncServerTrigger
             ICmd cmd = new InstallCmd();
             result.Add(cmd.CommandName, cmd);
 
+            cmd = new UninstallCmd();
+            result.Add(cmd.CommandName, cmd);
+
             return result;
         }
-
 
         static Dictionary<string, ICmd> mCommands;
 
@@ -92,6 +94,12 @@ Remarks:
 
 
 uninstall       Autoremoves the triggers from the source server.
+
+Usage:
+    uninstall <src_server>
+
+    src_server  The source repository, where the server-side triggers will be
+                uninstalled from.
 
 Examples:
     syncservertrigger uninstall
