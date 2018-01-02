@@ -10,6 +10,12 @@ namespace Codice.SyncServerTrigger.Commands
 
         void ICmd.Execute(string[] args)
         {
+            if (args.Length >= 2 && args[1].Contains("help"))
+            {
+                Console.Error.WriteLine(Help);
+                Environment.Exit(1);
+            }
+
             if (args.Length != 3)
             {
                 Console.Error.WriteLine(HELP);
@@ -48,24 +54,20 @@ namespace Codice.SyncServerTrigger.Commands
                 "Using syncservertrigger located at {0}.",
                 executablePath);
 
-            InstallTrigger(
-                "after-checkin", "sync afterci", executablePath, srcServer);
-
-            InstallTrigger(
-                "after-replicationwrite", "sync-afterreplica", executablePath, srcServer);
-
-            InstallTrigger(
-                "after-mklabel", "sync aftermklabel", executablePath, srcServer);
-
-            InstallTrigger(
-                "after-chattvalue", "sync afterchattval", executablePath, srcServer);
+            if (!InstallTrigger("after-checkin", "sync afterci", executablePath, srcServer)
+                || !InstallTrigger("after-replicationwrite", "sync-afterreplica", executablePath, srcServer)
+                || !InstallTrigger("after-mklabel", "sync aftermklabel", executablePath, srcServer)
+                || !InstallTrigger("after-chattvalue", "sync afterchattval", executablePath, srcServer))
+            {
+                Environment.Exit(1);
+            }
 
             Console.WriteLine(
                 "Triggers successfully installed! Check 'cm listtriggers --server={0}'.",
                 srcServer);
         }
 
-        static void InstallTrigger(
+        static bool InstallTrigger(
             string triggerType,
             string triggerName,
             string executablePath,
@@ -87,14 +89,14 @@ namespace Codice.SyncServerTrigger.Commands
                 false);
 
             if (result == 0)
-                return;
+                return true;
 
             WriteError(
                 cmdLine,
                 string.IsNullOrEmpty(stdOut) ? string.Empty : stdOut,
                 string.IsNullOrEmpty(stdErr) ? string.Empty : stdErr);
 
-            Environment.Exit(1);
+            return false;
         }
 
         static void WriteError(string commandLine, string output, string error)
