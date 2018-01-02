@@ -1,80 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+
+using syncservertrigger.commands;
 
 namespace syncservertrigger
 {
     class Program
     {
-        internal enum Commands
-        {
-            // User commands
-            Help,
-            Install,
-            Uninstall,
-            Server,
-            RepoFilter,
-            RepoMap,
-            WarnEmail,
-
-            // Command to be executed by Plastic SCM
-            Trigger,
-
-            // Command to be executed by syncservertrigger itself
-            Execute
-        }
-
         static void Main(string[] args)
         {
             if (args.Length == 0)
             {
                 Console.Error.WriteLine(HELP);
-                return;
+                Environment.Exit(1);
             }
 
-            Commands command = ParseCommand(args[0]);
+            mCommands = GetCommands();
 
-            if (command == Commands.Help)
+            ICmd command;
+            if (!mCommands.TryGetValue(args[0], out command))
             {
-                Console.Error.Write(HELP);
-                return;
+                Console.Error.WriteLine(HELP);
+                Environment.Exit(1);
             }
+
+            command.Execute(args);
         }
 
-        static Commands ParseCommand(string command)
+        static Dictionary<string, ICmd> GetCommands()
         {
-            if (AreEqual(command, "help") || AreEqual(command, "--help"))
-                return Commands.Help;
+            Dictionary<string, ICmd> result =
+                new Dictionary<string, ICmd>(StringComparer.InvariantCultureIgnoreCase);
 
-            if (AreEqual(command, "install"))
-                return Commands.Install;
+            ICmd cmd = new InstallCmd();
+            result.Add(cmd.CommandName, cmd);
 
-            if (AreEqual(command, "uninstall"))
-                return Commands.Uninstall;
-
-            if (AreEqual(command, "server"))
-                return Commands.Server;
-
-            if (AreEqual(command, "repofilter"))
-                return Commands.RepoFilter;
-
-            if (AreEqual(command, "repomap"))
-                return Commands.RepoMap;
-
-            if (AreEqual(command, "warnemail"))
-                return Commands.WarnEmail;
-
-            if (AreEqual(command, "trigger"))
-                return Commands.Trigger;
-
-            if (AreEqual(command, "execute"))
-                return Commands.Execute;
-
-            return Commands.Help;
+            return result;
         }
 
-        static bool AreEqual(string left, string right)
-        {
-            return StringComparer.InvariantCultureIgnoreCase.Compare(left, right) == 0;
-        }
+
+        static Dictionary<string, ICmd> mCommands;
 
         const string HELP =
 @"Please, keep in mind the following restrictions:
