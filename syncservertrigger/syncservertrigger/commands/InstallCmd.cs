@@ -2,7 +2,7 @@
 
 using Codice.CmdRunner;
 
-namespace syncservertrigger.commands
+namespace Codice.SyncServerTrigger.Commands
 {
     internal class InstallCmd : ICmd
     {

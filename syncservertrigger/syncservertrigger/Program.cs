@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using syncservertrigger.commands;
+using Codice.SyncServerTrigger.Commands;
 
-namespace syncservertrigger
+namespace Codice.SyncServerTrigger
 {
     class Program
     {

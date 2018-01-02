@@ -1,4 +1,4 @@
-﻿namespace syncservertrigger.commands
+﻿namespace Codice.SyncServerTrigger.Commands
 {
     internal interface ICmd
     {
