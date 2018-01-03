@@ -50,6 +50,7 @@
     <Compile Include="commands\ICmd.cs" />
     <Compile Include="commands\InstallCmd.cs" />
     <Compile Include="commands\UninstallCmd.cs" />
+    <Compile Include="configuration\ConfigurationManager.cs" />
     <Compile Include="models\Trigger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
