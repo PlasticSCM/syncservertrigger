@@ -527,12 +527,34 @@ namespace SyncServerTrigger.Configuration
             if (string.IsNullOrEmpty(res))
                 return defaultValue;
 
-            int[] result = DeserializeInts(res);
+            int[] result = DeserializeArray<int>(res, int.Parse);
 
             return (result == null) ? defaultValue : result;
         }
 
         public void SetInts(string name, int[] values)
+        {
+            string key = name;
+
+            if (values == null)
+                mEntries[key] = values;
+
+            mEntries[key] = SerializeWithCommas(values);
+        }
+
+        public string[] GetStrings(string name, string[] defaultValue)
+        {
+            string res = mEntries[name] as string;
+
+            if (string.IsNullOrEmpty(res))
+                return defaultValue;
+
+            string[] result = DeserializeArray<string>(res, str => str);
+
+            return (result == null) ? defaultValue : result;
+        }
+
+        public void SetStrings(string name, string[] values)
         {
             string key = name;
 
@@ -600,25 +622,27 @@ namespace SyncServerTrigger.Configuration
             return sb.ToString();
         }
 
-        public static int[] DeserializeInts(string target)
+        public static T[] DeserializeArray<T>(
+            string target, Func<string, T> converter)
         {
             string[] strings = target.Split(',');
 
-            if (strings == null || strings.Length == 0) return null;
+            if (strings == null || strings.Length == 0)
+                return null;
 
-            int[] result = new int[strings.Length];
+            T[] result = new T[strings.Length];
 
-            for (int i = 0; i < strings.Length; ++i)
+            for (int i = 0; i < strings.Length; i++)
             {
                 try
                 {
-                    result[i] = int.Parse(strings[i]);
+                    result[i] = converter(strings[i]);
                 }
                 catch
                 {
                     throw new Exception(string.Format(
-                        "Failed to parse int value '{0}' in string '{1}'.",
-                            result[i], target));
+                        "Failed to parse T value '{0}' in string '{1}'",
+                        result[i], target));
                 }
             }
 
