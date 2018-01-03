@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 
+using Codice.SyncServerTrigger;
+
 namespace Codice.CmdRunner
 {
     internal class CodiceCmdRunner : BaseCmdRunner
@@ -286,7 +288,7 @@ namespace Codice.CmdRunner
 
             return !USE_FILE_COMMUNICATION
                ? ReadStdOutput(mCmdProc, out output, out error)
-               : PlatformIdentifier.IsWindows()
+               : PlatformUtils.IsWindows
                    ? ReadFileOutputWindows(mCmdProc, outputfile, out output, out error)
                    : ReadFileOutputUnix(mCmdProc, outputfile, out output, out error);
         }

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Diagnostics;
 
+using Codice.SyncServerTrigger;
+
 namespace Codice.CmdRunner
 {
     public interface IConsoleWriter
@@ -142,7 +144,7 @@ namespace Codice.CmdRunner
             {
                 if (!string.IsNullOrEmpty(input))
                 {
-                    if (!PlatformIdentifier.IsWindows())
+                    if (!PlatformUtils.IsWindows)
                     {
                         byte[] buffer = System.Text.Encoding.UTF8.GetBytes(input);
                         p.StandardInput.BaseStream.Write(buffer, 0, buffer.Length);
