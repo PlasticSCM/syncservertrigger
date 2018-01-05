@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Codice.SyncServerTrigger.Configuration
 {
@@ -19,9 +16,18 @@ namespace Codice.SyncServerTrigger.Configuration
             return new ToolConfiguration(LoadConfigFile(ConfigFileName));
         }
 
+        internal ServerConfiguration ServerConfig
+        {
+            get
+            {
+                return new ServerConfiguration(
+                    mConfigFile.GetSection(SERVER_SECTION_NAME));
+            }
+        }
+
         internal void Save()
         {
-
+            mConfigFile.Save();
         }
 
         static ConfigurationFile LoadConfigFile(string configFile)
@@ -32,11 +38,11 @@ namespace Codice.SyncServerTrigger.Configuration
             if ((result = TryLoadOn(appPath, configFile))!= null)
                 return result;
 
-            string defaultPath = Utils.GetHomeBasedPath(configFile);
-            if ((result = TryLoadOn(defaultPath, configFile)) != null)
+            if ((result = TryLoadOn(PlatformUtils.HomePath, configFile)) != null)
                 return result;
 
-            return new ConfigurationFile(Path.Combine(defaultPath, configFile));
+            return new ConfigurationFile(
+                Path.Combine(PlatformUtils.HomePath, configFile));
         }
 
         static ConfigurationFile TryLoadOn(string path, string configFile)
@@ -55,5 +61,37 @@ namespace Codice.SyncServerTrigger.Configuration
         ConfigurationFile mConfigFile;
 
         const string ConfigFileName = "syncservertrigger.conf";
+        const string SERVER_SECTION_NAME = "servers";
+    }
+
+    internal class ServerConfiguration
+    {
+        internal ServerConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        internal List<string> GetServers()
+        {
+            return mSection.GetStrings(SERVERS_KEY, new string[] { });
+        }
+
+        internal void AddServer(string server)
+        {
+            List<string> servers = GetServers();
+            servers.Add(server);
+            mSection.SetStringList(SERVERS_KEY, servers);
+        }
+
+        internal void RemoveServer(string server)
+        {
+            List<string> servers = GetServers();
+            servers.RemoveAll(item => item.Equals(
+                server, StringComparison.InvariantCultureIgnoreCase));
+            mSection.SetStringList(SERVERS_KEY, servers);
+        }
+
+        ConfigurationSection mSection;
+        const string SERVERS_KEY = "servers";
     }
 }
