@@ -38,6 +38,9 @@ namespace Codice.SyncServerTrigger
             cmd = new UninstallCmd();
             result.Add(cmd.CommandName, cmd);
 
+            cmd = new ServerCmd();
+            result.Add(cmd.CommandName, cmd);
+
             return result;
         }
 

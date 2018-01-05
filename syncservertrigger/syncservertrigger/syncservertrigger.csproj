@@ -48,6 +48,7 @@
     <Compile Include="cmdrunner\LaunchCommand.cs" />
     <Compile Include="commands\ICmd.cs" />
     <Compile Include="commands\InstallCmd.cs" />
+    <Compile Include="commands\ServerCmd.cs" />
     <Compile Include="commands\UninstallCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
