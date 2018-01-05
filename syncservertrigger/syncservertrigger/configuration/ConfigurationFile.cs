@@ -277,41 +277,19 @@ namespace Codice.SyncServerTrigger.Configuration
             SetLong(name, ticks);
         }
 
-        public int[] GetInts(string name, int[] defaultValue)
+        public List<string> GetStrings(string name, string[] defaultValue)
         {
             string res = mEntries[name] as string;
 
             if (string.IsNullOrEmpty(res))
-                return defaultValue;
+                return new List<string>(defaultValue);
 
-            int[] result = DeserializeArray<int>(res, int.Parse);
+            List<string> result = DeserializeList<string>(res, str => str);
 
-            return (result == null) ? defaultValue : result;
+            return (result == null) ? new List<string>(defaultValue) : result;
         }
 
-        public void SetInts(string name, int[] values)
-        {
-            string key = name;
-
-            if (values == null)
-                mEntries[key] = values;
-
-            mEntries[key] = SerializeWithCommas(values);
-        }
-
-        public string[] GetStrings(string name, string[] defaultValue)
-        {
-            string res = mEntries[name] as string;
-
-            if (string.IsNullOrEmpty(res))
-                return defaultValue;
-
-            string[] result = DeserializeArray<string>(res, str => str);
-
-            return (result == null) ? defaultValue : result;
-        }
-
-        public void SetStrings(string name, string[] values)
+        public void SetStringList(string name, List<string> values)
         {
             string key = name;
 
@@ -358,7 +336,7 @@ namespace Codice.SyncServerTrigger.Configuration
             writer.WriteLine();
         }
 
-        public static string SerializeWithCommas(params object[] args)
+        public static string SerializeWithCommas(IEnumerable args)
         {
             bool isFirst = true;
 
@@ -379,7 +357,7 @@ namespace Codice.SyncServerTrigger.Configuration
             return sb.ToString();
         }
 
-        public static T[] DeserializeArray<T>(
+        public static List<T> DeserializeList<T>(
             string target, Func<string, T> converter)
         {
             string[] strings = target.Split(',');
@@ -387,13 +365,13 @@ namespace Codice.SyncServerTrigger.Configuration
             if (strings == null || strings.Length == 0)
                 return null;
 
-            T[] result = new T[strings.Length];
+            List<T> result = new List<T>();
 
             for (int i = 0; i < strings.Length; i++)
             {
                 try
                 {
-                    result[i] = converter(strings[i]);
+                    result.Add(converter(strings[i]));
                 }
                 catch
                 {
