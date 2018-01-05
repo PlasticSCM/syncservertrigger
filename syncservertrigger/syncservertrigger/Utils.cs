@@ -16,15 +16,15 @@ namespace Codice.SyncServerTrigger
             return true; // TODO
         }
 
-        internal static string GetHomeBasedDirectoryPath(string directoryName)
+        internal static string GetHomeBasedPath(string fileName)
         {
             return PlatformUtils.IsWindows
                 ? Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    directoryName)
+                    fileName)
                 : Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                    string.Format(".{0}", directoryName));
+                    string.Format(".{0}", fileName));
         }
     }
 }
