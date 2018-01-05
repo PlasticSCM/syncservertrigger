@@ -277,7 +277,7 @@ namespace Codice.SyncServerTrigger.Configuration
             SetLong(name, ticks);
         }
 
-        public List<string> GetStrings(string name, string[] defaultValue)
+        public List<string> GetStringList(string name, string[] defaultValue)
         {
             string res = mEntries[name] as string;
 
