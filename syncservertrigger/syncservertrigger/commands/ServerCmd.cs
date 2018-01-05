@@ -66,7 +66,7 @@ namespace Codice.SyncServerTrigger.Commands
 
         void DeleteServer(string server)
         {
-            Console.WriteLine("Removing server '{0}'", server);
+            Console.WriteLine("Deleting server '{0}'", server);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             toolConfig.ServerConfig.RemoveServer(server);
