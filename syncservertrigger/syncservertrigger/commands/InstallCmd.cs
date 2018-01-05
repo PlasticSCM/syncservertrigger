@@ -1,5 +1,7 @@
 ﻿using System;
 
+using Codice.SyncServerTrigger.Configuration;
+
 namespace Codice.SyncServerTrigger.Commands
 {
     internal static class TriggerNames
@@ -72,6 +74,15 @@ namespace Codice.SyncServerTrigger.Commands
 
             Console.WriteLine(
                 "Triggers successfully installed in {0}!", srcServer);
+
+            Console.WriteLine(
+                "Adding '{0}' as the first destination server.", dstServer);
+
+            ToolConfiguration toolConfig = ToolConfiguration.Load();
+            toolConfig.ServerConfig.AddServer(dstServer);
+            toolConfig.Save();
+
+            Console.WriteLine("Server '{0}' correctly added!", dstServer);
         }
 
         static bool InstallTrigger(
