@@ -17,6 +17,16 @@ namespace Codice.SyncServerTrigger
             get { return CurrentPlatform == Platform.Windows; }
         }
 
+        public static string HomePath
+        {
+            get
+            {
+                return IsWindows
+                    ? Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+                    : Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            }
+        }
+
         public static Platform CurrentPlatform
         {
             get { return GetCurrentPlatform(); }
