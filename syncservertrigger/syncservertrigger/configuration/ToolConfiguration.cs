@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Codice.SyncServerTrigger.Configuration
 {
@@ -31,6 +32,15 @@ namespace Codice.SyncServerTrigger.Configuration
             {
                 return new RepoFilterConfiguration(
                     mConfigFile.GetSection(REPO_FILTER_SECTION_NAME));
+            }
+        }
+
+        internal RepoMapConfiguration RepoMapConfig
+        {
+            get
+            {
+                return new RepoMapConfiguration(
+                    mConfigFile.GetSection(REPO_MAP_SECTION_NAME));
             }
         }
 
@@ -72,6 +82,7 @@ namespace Codice.SyncServerTrigger.Configuration
         const string ConfigFileName = "syncservertrigger.conf";
         const string SERVER_SECTION_NAME = "servers";
         const string REPO_FILTER_SECTION_NAME = "repofilters";
+        const string REPO_MAP_SECTION_NAME = "repomappings";
     }
 
     internal class ServerConfiguration
@@ -134,5 +145,44 @@ namespace Codice.SyncServerTrigger.Configuration
 
         ConfigurationSection mSection;
         const string FILTERS_KEY = "repofilters";
+    }
+
+    internal class RepoMapConfiguration
+    {
+        internal RepoMapConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        internal List<string> GetMappedRepos()
+        {
+            return mSection.GetStringList(MAPS_KEY, new string[] { })
+                .Select(item => string.Join(" -> ", item.Split(SEPARATOR))).ToList();
+        }
+
+        internal void AddMappedRepo(string srcRepo, string dstRepo)
+        {
+            List<string> mappedRepos =
+                mSection.GetStringList(MAPS_KEY, new string[] { });
+            mappedRepos.Add(string.Format(FORMAT, srcRepo, dstRepo));
+            mSection.SetStringList(MAPS_KEY, mappedRepos);
+        }
+
+        internal void DeleteMappedRepo(string srcRepo, string dstRepo)
+        {
+            string mapToRemove = string.Format(FORMAT, srcRepo, dstRepo);
+
+            List<string> mappedRepos =
+                mSection.GetStringList(MAPS_KEY, new string[] { });
+            mappedRepos.RemoveAll(item =>
+                item.Equals(mapToRemove, StringComparison.InvariantCultureIgnoreCase));
+            mSection.SetStringList(MAPS_KEY, mappedRepos);
+        }
+
+        ConfigurationSection mSection;
+        const string MAPS_KEY = "repomaps";
+
+        const string FORMAT = "{0}#{1}";
+        static readonly char[] SEPARATOR = new char[] { '#' };
     }
 }
