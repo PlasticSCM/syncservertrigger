@@ -49,6 +49,7 @@
     <Compile Include="commands\ICmd.cs" />
     <Compile Include="commands\InstallCmd.cs" />
     <Compile Include="commands\RepofilterCmd.cs" />
+    <Compile Include="commands\RepomapCmd.cs" />
     <Compile Include="commands\ServerCmd.cs" />
     <Compile Include="commands\UninstallCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
