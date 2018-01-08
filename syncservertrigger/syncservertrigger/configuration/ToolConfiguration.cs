@@ -112,21 +112,21 @@ namespace Codice.SyncServerTrigger.Configuration
             mSection = section;
         }
 
-        internal List<string> GetFilters()
+        internal List<string> GetFilteredRepos()
         {
             return mSection.GetStringList(FILTERS_KEY, new string[] { });
         }
 
-        internal void AddRepository(string repo)
+        internal void AddFilteredRepo(string repo)
         {
-            List<string> filteredRepos = GetFilters();
+            List<string> filteredRepos = GetFilteredRepos();
             filteredRepos.Add(repo);
             mSection.SetStringList(FILTERS_KEY, filteredRepos);
         }
 
-        internal void DeleteRepository(string repo)
+        internal void DeleteFilteredRepo(string repo)
         {
-            List<string> filteredRepos = GetFilters();
+            List<string> filteredRepos = GetFilteredRepos();
             filteredRepos.RemoveAll(item => item.Equals(
                 repo, StringComparison.InvariantCultureIgnoreCase));
             mSection.SetStringList(FILTERS_KEY, filteredRepos);

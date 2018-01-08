@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Codice.SyncServerTrigger.Configuration;
 
@@ -25,19 +22,19 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (args.Length == 2 && args[1] == "list")
             {
-                ListRepoFilters();
+                ListFilteredRepos();
                 return;
             }
 
             if (args.Length == 3 && args[1] == "add")
             {
-                AddRepoFilter(args[2]);
+                AddFilteredRepo(args[2]);
                 return;
             }
 
             if (args.Length == 3 && args[1] == "delete")
             {
-                DeleteRepoFilter(args[2]);
+                DeleteFilteredRepo(args[2]);
                 return;
             }
 
@@ -45,40 +42,41 @@ namespace Codice.SyncServerTrigger.Commands
             Environment.Exit(1);
         }
 
-        void ListRepoFilters()
+        void ListFilteredRepos()
         {
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            List<string> filters = toolConfig.RepoFilterConfig.GetFilters();
+            List<string> filteredRepos =
+                toolConfig.RepoFilterConfig.GetFilteredRepos();
 
-            if (filters.Count == 0)
+            if (filteredRepos.Count == 0)
             {
                 Console.WriteLine("There are no configured repo filters.");
                 return;
             }
 
-            filters.ForEach(repoFilter => Console.WriteLine(repoFilter));
+            filteredRepos.ForEach(repoFilter => Console.WriteLine(repoFilter));
         }
 
-        void AddRepoFilter(string repo)
+        void AddFilteredRepo(string repo)
         {
             Console.WriteLine("Adding repository '{0}' to the filter list.", repo);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            toolConfig.RepoFilterConfig.AddRepository(repo);
+            toolConfig.RepoFilterConfig.AddFilteredRepo(repo);
             toolConfig.Save();
 
             Console.WriteLine("Repository '{0}' correctly added!", repo);
         }
 
-        void DeleteRepoFilter(string repo)
+        void DeleteFilteredRepo(string repo)
         {
             Console.WriteLine("Deleting repository '{0}' from the filter list.", repo);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            toolConfig.RepoFilterConfig.DeleteRepository(repo);
+            toolConfig.RepoFilterConfig.DeleteFilteredRepo(repo);
             toolConfig.Save();
 
-            Console.WriteLine("Repository '{0}' correctly deleted!");
+            Console.WriteLine("Repository '{0}' correctly deleted!", repo);
         }
 
         const string HELP =
