@@ -160,7 +160,6 @@ repofilter      Used to operate on the local repositories synchronization
 Usage:
     repofilter <list | <delete|add> repository>
 
-
     list        Lists the repositories that will be pushed to the destination
                 servers. These are your local repositories, without the ones you
                 manually removed.
@@ -189,22 +188,21 @@ repomap         Used to operate on the local repositories mapping with remote
                 repositories.
 
 Usage:
-    repomap <list | <add|remove> <src_repo> <dst_repo>@<dst_server>>
-
+    repomap <list | <add|delete> <src_repo> <dst_repo>@<dst_server>>
 
     list        Lists the repository name mappings.
     add         Adds a new mapping to the list.
-    remove      Removes the specified mapping from the list.
+    delete      Deletes the specified mapping from the list.
     src_repo    The name of the repository in the source server.
     dst_repo    The name of the repostiroy in the destination server.
     dst_server  The destination server, including port.
 
 Examples:
-    syncservertrigger repomap add codice_local codice @skull:9097
+    syncservertrigger repomap add codice_local codice@skull:9097
     (Maps the 'codice_local' source repository to the 'codice' destination
     repository only for the 'skull:9097' destination server.)
 
-    synservertrigger repomap remove codice_local codice @skull:9097
+    synservertrigger repomap remove codice_local codice@skull:9097
     (Removes the mapping between the source repository 'codice_local' and the
     destination repository 'codice' only for the 'skull:9097' destination server.)
 
