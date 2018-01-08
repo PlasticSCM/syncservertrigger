@@ -25,6 +25,15 @@ namespace Codice.SyncServerTrigger.Configuration
             }
         }
 
+        internal RepoFilterConfiguration RepoFilterConfig
+        {
+            get
+            {
+                return new RepoFilterConfiguration(
+                    mConfigFile.GetSection(REPO_FILTER_SECTION_NAME));
+            }
+        }
+
         internal void Save()
         {
             mConfigFile.Save();
@@ -62,6 +71,7 @@ namespace Codice.SyncServerTrigger.Configuration
 
         const string ConfigFileName = "syncservertrigger.conf";
         const string SERVER_SECTION_NAME = "servers";
+        const string REPO_FILTER_SECTION_NAME = "repofilters";
     }
 
     internal class ServerConfiguration
@@ -93,5 +103,36 @@ namespace Codice.SyncServerTrigger.Configuration
 
         ConfigurationSection mSection;
         const string SERVERS_KEY = "servers";
+    }
+
+    internal class RepoFilterConfiguration
+    {
+        internal RepoFilterConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        internal List<string> GetFilters()
+        {
+            return mSection.GetStringList(FILTERS_KEY, new string[] { });
+        }
+
+        internal void AddRepository(string repo)
+        {
+            List<string> filteredRepos = GetFilters();
+            filteredRepos.Add(repo);
+            mSection.SetStringList(FILTERS_KEY, filteredRepos);
+        }
+
+        internal void DeleteRepository(string repo)
+        {
+            List<string> filteredRepos = GetFilters();
+            filteredRepos.RemoveAll(item => item.Equals(
+                repo, StringComparison.InvariantCultureIgnoreCase));
+            mSection.SetStringList(FILTERS_KEY, filteredRepos);
+        }
+
+        ConfigurationSection mSection;
+        const string FILTERS_KEY = "repofilters";
     }
 }
