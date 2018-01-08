@@ -81,6 +81,34 @@ namespace Codice.SyncServerTrigger.Commands
             Console.WriteLine("Repository '{0}' correctly deleted!");
         }
 
-        const string HELP = "";
+        const string HELP =
+@"repofilter      Used to operate on the local repositories synchronization
+                configuration.
+
+Usage:
+    repofilter <list | <delete|add> repository>
+
+
+    list        Lists the repositories that will be pushed to the destination
+                servers. These are your local repositories, without the ones you
+                manually removed.
+    delete      Deletes a repository from the filter list.
+    add         Adds a repository to the filter list.
+    repository  The name of the repository on the source server.
+
+Examples:
+    syncservertrigger repofilter add codice_local
+    (Adds the 'codice_local' repository to the list of filtered-out repositories,
+    so it won't be synced with any of the destination servers.)
+
+    syncservertrigger repofilter remove codice_local
+    (Removes the 'codice_local' repository from the filtered-out repositories,
+    so it will be synced with the destination servers.)
+
+Remarks:
+    By default, all of the local repositories are synchronized,
+    including new ones.You have to manually add a repository to the filter list
+    if you don't want it to be synced. The 'remove' command only applies for
+    filtered repositories, to re-admit them in the synchronization process.";
     }
 }

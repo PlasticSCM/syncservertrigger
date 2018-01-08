@@ -137,7 +137,7 @@ namespace Codice.SyncServerTrigger.Commands
         }
 
         const string HELP =
-            @"uninstall       Autoremoves the triggers from the source server.
+@"uninstall       Autoremoves the triggers from the source server.
 
 Usage:
     uninstall <src_server>

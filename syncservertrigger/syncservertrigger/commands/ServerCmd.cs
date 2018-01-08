@@ -78,6 +78,33 @@ namespace Codice.SyncServerTrigger.Commands
             Console.WriteLine("Server '{0}' correctly deleted!", server);
         }
 
-        const string HELP = "";
+        const string HELP =
+@"server          Used to operate on the remote servers synchronization
+                configuration.
+
+Usage:
+    server <list | <add|delete> dst_server>
+
+    list        Lists the configured destination servers.
+    add         Adds 'dst_server' to the list of destination servers.
+    delete      Deletes 'dst_server' from the list of destination servers.
+
+Examples:
+    syncservertrigger server list
+    (Shows a list of the configured destination servers.)
+
+    syncservertrigger server add ssl://diana.mydomain:8088
+    (Adds the specified server to the list of destination servers.)
+
+    syncservertrigger server remove ssl://diana.mydomain:8088
+    (Removes the specified server from the list of destination servers.)
+
+Remarks:
+    By default, every repository on the source server is expected to exist with
+    the same name on the destination server.If that is not the case, check the
+    'repomap' command.
+
+    By default, every repository on the source server is synced with the remote
+    server. If that is not the desired behavior, check the 'repofilter' command.";
     }
 }
