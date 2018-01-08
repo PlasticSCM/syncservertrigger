@@ -37,6 +37,9 @@ namespace Codice.SyncServerTrigger.Commands
                 DeleteServer(args[2]);
                 return;
             }
+
+            Console.Error.WriteLine(Help);
+            Environment.Exit(1);
         }
 
         void ListServers()
@@ -69,10 +72,10 @@ namespace Codice.SyncServerTrigger.Commands
             Console.WriteLine("Deleting server '{0}'", server);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            toolConfig.ServerConfig.RemoveServer(server);
+            toolConfig.ServerConfig.DeleteServer(server);
             toolConfig.Save();
 
-            Console.WriteLine("Server '{0}' correctly removed!", server);
+            Console.WriteLine("Server '{0}' correctly deleted!", server);
         }
 
         const string HELP = "";

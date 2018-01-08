@@ -152,13 +152,13 @@ repofilter      Used to operate on the local repositories synchronization
                 configuration.
 
 Usage:
-    repofilter <list | <remove|add> repository>
+    repofilter <list | <delete|add> repository>
 
 
     list        Lists the repositories that will be pushed to the destination
                 servers. These are your local repositories, without the ones you
                 manually removed.
-    remove      Removes a repository from the filter list.
+    delete      Deletes a repository from the filter list.
     add         Adds a repository to the filter list.
     repository  The name of the repository on the source server.
 

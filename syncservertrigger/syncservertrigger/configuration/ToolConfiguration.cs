@@ -73,7 +73,7 @@ namespace Codice.SyncServerTrigger.Configuration
 
         internal List<string> GetServers()
         {
-            return mSection.GetStrings(SERVERS_KEY, new string[] { });
+            return mSection.GetStringList(SERVERS_KEY, new string[] { });
         }
 
         internal void AddServer(string server)
@@ -83,7 +83,7 @@ namespace Codice.SyncServerTrigger.Configuration
             mSection.SetStringList(SERVERS_KEY, servers);
         }
 
-        internal void RemoveServer(string server)
+        internal void DeleteServer(string server)
         {
             List<string> servers = GetServers();
             servers.RemoveAll(item => item.Equals(
