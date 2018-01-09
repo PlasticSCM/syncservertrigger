@@ -47,6 +47,12 @@ namespace Codice.SyncServerTrigger
             cmd = new RepomapCmd();
             result.Add(cmd.CommandName, cmd);
 
+            cmd = new TriggerCmd();
+            result.Add(cmd.CommandName, cmd);
+
+            cmd = new RunCmd();
+            result.Add(cmd.CommandName, cmd);
+
             return result;
         }
 
