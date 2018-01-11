@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Codice.SyncServerTrigger.Configuration;
+using Codice.SyncServerTrigger.Models;
 
 namespace Codice.SyncServerTrigger.Commands
 {
@@ -64,10 +65,10 @@ namespace Codice.SyncServerTrigger.Commands
                 "Using syncservertrigger located at {0}.",
                 executablePath);
 
-            if (!InstallTrigger("after-checkin", TriggerNames.AfterCi, executablePath, srcServer)
-                || !InstallTrigger("after-replicationwrite", TriggerNames.AfterReplication, executablePath, srcServer)
-                || !InstallTrigger("after-mklabel", TriggerNames.AfterMkLabel, executablePath, srcServer)
-                || !InstallTrigger("after-chattvalue", TriggerNames.AfterChAtt, executablePath, srcServer))
+            if (!InstallTrigger(Trigger.Names.AfterCi, TriggerNames.AfterCi, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Names.AfterRW, TriggerNames.AfterReplication, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Names.AfterMkLb, TriggerNames.AfterMkLabel, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Names.AfterChAttVal, TriggerNames.AfterChAtt, executablePath, srcServer))
             {
                 Environment.Exit(1);
             }

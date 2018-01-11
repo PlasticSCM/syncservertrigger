@@ -8,6 +8,14 @@ namespace Codice.SyncServerTrigger.Models
         // From 'cm listtriggers --help'
         internal const string CmFormat = "{0}#{1}#{2}#{3}#{4}#{5}";
 
+        internal static class Names
+        {
+            internal const string AfterCi = "after-checkin";
+            internal const string AfterRW = "after-replicationwrite";
+            internal const string AfterMkLb = "after-mklabel";
+            internal const string AfterChAttVal = "after-chattvalue";
+        }
+
         internal int Position { get; private set; }
         internal string Name { get; private set; }
         internal string Path { get; private set; }
