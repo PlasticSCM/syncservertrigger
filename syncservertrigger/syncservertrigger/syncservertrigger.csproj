@@ -57,6 +57,7 @@
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
     <Compile Include="models\Trigger.cs" />
+    <Compile Include="PlasticEnvironment.cs" />
     <Compile Include="PlatformUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
