@@ -46,19 +46,16 @@ namespace Codice.SyncServerTrigger.Models
 
             List<Trigger> result = new List<Trigger>();
 
-            foreach (string line in cmOutput.Split(
-                new string[] { Environment.NewLine },
-                StringSplitOptions.RemoveEmptyEntries))
-            {
-                result.Add(ParseLine(line));
-            }
+            Array.ForEach(
+                cmOutput.Split(NEWLINE, StringSplitOptions.RemoveEmptyEntries),
+                line => result.Add(ParseLine(line)));
 
             return result;
         }
 
         static Trigger ParseLine(string cmLine)
         {
-            string[] fields = cmLine.Split(new char[] { '#' });
+            string[] fields = cmLine.Split(FIELD_SEPARATOR);
             if (fields.Length != 6)
                 return null;
 
@@ -70,5 +67,8 @@ namespace Codice.SyncServerTrigger.Models
                 type: fields[4],
                 filter: fields[5]);
         }
+
+        static readonly string[] NEWLINE = { Environment.NewLine };
+        static readonly char[] FIELD_SEPARATOR = { '#' };
     }
 }
