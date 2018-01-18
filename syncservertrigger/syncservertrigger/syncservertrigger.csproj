@@ -56,6 +56,7 @@
     <Compile Include="commands\UninstallCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
+    <Compile Include="models\Replica.cs" />
     <Compile Include="models\RepoMapping.cs" />
     <Compile Include="models\Trigger.cs" />
     <Compile Include="PlasticEnvironment.cs" />
