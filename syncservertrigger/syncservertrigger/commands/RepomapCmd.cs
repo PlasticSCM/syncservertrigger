@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Codice.SyncServerTrigger.Configuration;
+using Codice.SyncServerTrigger.Models;
 
 namespace Codice.SyncServerTrigger.Commands
 {
@@ -13,8 +14,9 @@ namespace Codice.SyncServerTrigger.Commands
 
         void ICmd.Execute(string[] args)
         {
-            if (args.Length == 1
-                || args.Length >= 2 && args[1].Contains("help"))
+            if (args.Length <= 1
+                || args.Length >= 3
+                || args[1].Contains("help"))
             {
                 Console.Error.WriteLine(Help);
                 Environment.Exit(1);
@@ -26,15 +28,15 @@ namespace Codice.SyncServerTrigger.Commands
                 return;
             }
 
-            if (args.Length == 4 && args[1] == "add")
+            if (args.Length == 5 && args[1] == "add")
             {
-                AddRepoMap(args[2], args[3]);
+                AddRepoMap(args[2], args[3], args[4]);
                 return;
             }
 
-            if (args.Length == 4 && args[1] == "delete")
+            if (args.Length == 5 && args[1] == "delete")
             {
-                DeleteRepoMap(args[2], args[3]);
+                DeleteRepoMap(args[2], args[3], args[4]);
                 return;
             }
 
@@ -45,7 +47,7 @@ namespace Codice.SyncServerTrigger.Commands
         void ListRepoMaps()
         {
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            List<string> mappings = toolConfig.RepoMapConfig.GetMappedRepos();
+            List<RepoMapping> mappings = toolConfig.RepoMapConfig.GetMappedRepos();
 
             if (mappings.Count == 0)
             {
@@ -53,28 +55,43 @@ namespace Codice.SyncServerTrigger.Commands
                 return;
             }
 
-            mappings.ForEach(repoMapping => Console.WriteLine(repoMapping));
+            mappings.ForEach(
+                repoMapping => Console.WriteLine(
+                    "{0} -> {1}@{2}",
+                    repoMapping.SrcRepo,
+                    repoMapping.DstRepo,
+                    repoMapping.DstServer));
         }
 
-        void AddRepoMap(string srcRepo, string dstRepo)
+        void AddRepoMap(string srcRepo, string dstRepo, string dstServer)
         {
+            RepoMapping mapping = new RepoMapping(srcRepo, dstRepo, dstServer);
+
             Console.WriteLine(
-                "Adding repository mapping '{0}' -> '{1}'", srcRepo, dstRepo);
+                "Adding repository mapping '{0}' -> '{1}@{2}'",
+                mapping.SrcRepo,
+                mapping.DstRepo,
+                mapping.DstServer);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            toolConfig.RepoMapConfig.AddMappedRepo(srcRepo, dstRepo);
+            toolConfig.RepoMapConfig.AddMappedRepo(mapping);
             toolConfig.Save();
 
             Console.WriteLine("Repository mapping correctly added!");
         }
 
-        void DeleteRepoMap(string srcRepo, string dstRepo)
+        void DeleteRepoMap(string srcRepo, string dstRepo, string dstServer)
         {
+            RepoMapping mapping = new RepoMapping(srcRepo, dstRepo, dstServer);
+
             Console.WriteLine(
-                "Deleting repository mapping '{0}' -> '{1}'", srcRepo, dstRepo);
+                "Deleting repository mapping '{0}' -> '{1}@{2}'",
+                mapping.SrcRepo,
+                mapping.DstRepo,
+                mapping.DstServer);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
-            toolConfig.RepoMapConfig.DeleteMappedRepo(srcRepo, dstRepo);
+            toolConfig.RepoMapConfig.DeleteMappedRepo(mapping);
             toolConfig.Save();
 
             Console.WriteLine("Repository mapping correctly deleted!");
@@ -85,7 +102,7 @@ namespace Codice.SyncServerTrigger.Commands
                 repositories.
 
 Usage:
-    repomap <list | <add|delete> <src_repo> <dst_repo>@<dst_server>>
+    repomap <list | <add|delete> <src_repo> <dst_repo> <dst_server>>
 
     list        Lists the repository name mappings.
     add         Adds a new mapping to the list.

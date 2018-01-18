@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Codice.SyncServerTrigger.Models;
+
 namespace Codice.SyncServerTrigger.Configuration
 {
     internal class ToolConfiguration
@@ -154,23 +156,23 @@ namespace Codice.SyncServerTrigger.Configuration
             mSection = section;
         }
 
-        internal List<string> GetMappedRepos()
+        internal List<RepoMapping> GetMappedRepos()
         {
-            return mSection.GetStringList(MAPS_KEY, new string[] { })
-                .Select(item => string.Join(" -> ", item.Split(SEPARATOR))).ToList();
+            return RepoMapping.ParseFromConfiguration(
+                mSection.GetStringList(MAPS_KEY, new string[] { }));
         }
 
-        internal void AddMappedRepo(string srcRepo, string dstRepo)
+        internal void AddMappedRepo(RepoMapping mapping)
         {
             List<string> mappedRepos =
                 mSection.GetStringList(MAPS_KEY, new string[] { });
-            mappedRepos.Add(string.Format(FORMAT, srcRepo, dstRepo));
+            mappedRepos.Add(mapping.ToConfigurationString());
             mSection.SetStringList(MAPS_KEY, mappedRepos);
         }
 
-        internal void DeleteMappedRepo(string srcRepo, string dstRepo)
+        internal void DeleteMappedRepo(RepoMapping mapping)
         {
-            string mapToRemove = string.Format(FORMAT, srcRepo, dstRepo);
+            string mapToRemove = mapping.ToConfigurationString();
 
             List<string> mappedRepos =
                 mSection.GetStringList(MAPS_KEY, new string[] { });

@@ -194,7 +194,7 @@ repomap         Used to operate on the local repositories mapping with remote
                 repositories.
 
 Usage:
-    repomap <list | <add|delete> <src_repo> <dst_repo>@<dst_server>>
+    repomap <list | <add|delete> <src_repo> <dst_repo> <dst_server>>
 
     list        Lists the repository name mappings.
     add         Adds a new mapping to the list.
