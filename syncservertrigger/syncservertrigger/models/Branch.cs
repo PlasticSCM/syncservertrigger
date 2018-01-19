@@ -2,13 +2,13 @@
 
 namespace Codice.SyncServerTrigger.Models
 {
-    internal class Branch
+    public class Branch
     {
-        internal string BranchName { get; private set; }
-        internal string RepositoryName { get; private set; }
-        internal string ServerName { get; private set; }
+        public string BranchName { get; private set; }
+        public string RepositoryName { get; private set; }
+        public string ServerName { get; private set; }
 
-        internal Branch(
+        public Branch(
             string branchName, string repositoryName, string serverName)
         {
             BranchName = branchName;
@@ -16,7 +16,7 @@ namespace Codice.SyncServerTrigger.Models
             ServerName = serverName;
         }
 
-        internal static Branch ParsePlasticBranchEnvironVar(
+        public static Branch ParsePlasticBranchEnvironVar(
             string environVarValue)
         {
             if (string.IsNullOrEmpty(environVarValue))
