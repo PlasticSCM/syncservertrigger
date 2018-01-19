@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ReplicaTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepoMappingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
