@@ -25,7 +25,7 @@ namespace Codice.SyncServerTrigger.Models
             DstServer = dstServer;
         }
 
-        internal List<Replica> BuildPendingReplicas(
+        internal static List<Replica> BuildPendingReplicas(
             string srcBranch,
             string srcRepo,
             string srcServer,

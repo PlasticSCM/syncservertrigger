@@ -35,5 +35,13 @@ namespace Codice.SyncServerTrigger
                 return Environment.GetEnvironmentVariable("PLASTIC_REPOSITORY_NAME");
             }
         }
+
+        internal static string PlasticServer
+        {
+            get
+            {
+                return Environment.GetEnvironmentVariable("PLASTIC_SERVER");
+            }
+        }
     }
 }

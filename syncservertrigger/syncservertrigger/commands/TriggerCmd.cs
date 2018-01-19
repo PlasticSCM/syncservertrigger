@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Codice.SyncServerTrigger.Models;
+
 namespace Codice.SyncServerTrigger.Commands
 {
     internal class TriggerCmd : ICmd
@@ -17,13 +19,53 @@ namespace Codice.SyncServerTrigger.Commands
                 Environment.Exit(1);
             }
 
-            Process process = new Process();
-            process.StartInfo.FileName = Utils.GetAssemblyLocation();
-            process.StartInfo.Arguments = string.Format("run {0}", args[1]);
+            string runArgs = string.Empty;
+            if (args.Length == 2 && args[1] == Trigger.Names.AfterCi)
+            {
+                runArgs = string.Format("run {0} \"{1}\"",
+                    Trigger.Names.AfterCi,
+                    PlasticEnvironment.PlasticChangeset);
+            }
+
+            if (args.Length == 2 && args[1] == Trigger.Names.AfterRW)
+            {
+                runArgs = string.Format("run {0} \"{1}\"",
+                    Trigger.Names.AfterRW,
+                    PlasticEnvironment.PlasticBranch);
+            }
+
+            if (args.Length == 2 && args[1] == Trigger.Names.AfterMkLb)
+            {
+                runArgs = string.Format("run {0} \"{1}\" \"{2}\" \"{3}\"",
+                    Trigger.Names.AfterMkLb,
+                    PlasticEnvironment.PlasticLabelName,
+                    PlasticEnvironment.PlasticRepositoryName,
+                    PlasticEnvironment.PlasticServer);
+            }
+
+            if (args.Length == 2 && args[1] == Trigger.Names.AfterChAttVal)
+            {
+                // TODO
+            }
+
+            if (string.IsNullOrEmpty(runArgs))
+            {
+                Console.Error.WriteLine(Help);
+                Environment.Exit(1);
+            }
+
+            BuildSyncServerTriggerProcess(runArgs).Start();
+        }
+
+        static Process BuildSyncServerTriggerProcess(string args)
+        {
+            Process result = new Process();
+            result.StartInfo.FileName = Utils.GetAssemblyLocation();
+            result.StartInfo.Arguments = args;
 #if !DEBUG
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            result.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 #endif
-            process.Start();
+            return result;
         }
 
         const string HELP =

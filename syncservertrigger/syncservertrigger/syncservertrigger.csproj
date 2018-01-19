@@ -56,6 +56,7 @@
     <Compile Include="commands\UninstallCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
+    <Compile Include="models\Branch.cs" />
     <Compile Include="models\Changeset.cs" />
     <Compile Include="models\Replica.cs" />
     <Compile Include="models\RepoMapping.cs" />
