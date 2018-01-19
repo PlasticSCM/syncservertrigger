@@ -3,13 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace Codice.SyncServerTrigger.Models
 {
-    internal class RepoMapping
+    public class RepoMapping
     {
-        internal string SrcRepo { get; private set; }
-        internal string DstRepo { get; private set; }
-        internal string DstServer { get; private set; }
+        public string SrcRepo { get; private set; }
+        public string DstRepo { get; private set; }
+        public string DstServer { get; private set; }
 
-        internal RepoMapping(
+        public RepoMapping(
             string srcRepo, string dstRepo, string dstServer)
         {
             SrcRepo = srcRepo;
@@ -17,13 +17,13 @@ namespace Codice.SyncServerTrigger.Models
             DstServer = dstServer;
         }
 
-        internal string ToConfigurationString()
+        public string ToConfigurationString()
         {
             return string.Format(FORMAT_STR, SrcRepo, DstRepo, DstServer);
         }
 
-        internal static List<RepoMapping> ParseFromConfiguration
-            (List<string> configuration)
+        public static List<RepoMapping> ParseFromConfiguration(
+            List<string> configuration)
         {
             List<RepoMapping> result = new List<RepoMapping>();
 
@@ -37,7 +37,7 @@ namespace Codice.SyncServerTrigger.Models
             return result;
         }
 
-        internal static RepoMapping ParseFromLine(string line)
+        static RepoMapping ParseFromLine(string line)
         {
             Match match = CONFIG_REGEX.Match(line);
 

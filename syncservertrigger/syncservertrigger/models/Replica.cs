@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Codice.SyncServerTrigger.Models
 {
-    internal class Replica
+    public class Replica
     {
-        internal string SrcBranch { get; private set; }
-        internal string SrcRepo { get; private set; }
-        internal string SrcServer { get; private set; }
-        internal string DstRepo { get; private set; }
-        internal string DstServer { get; private set; }
+        public string SrcBranch { get; private set; }
+        public string SrcRepo { get; private set; }
+        public string SrcServer { get; private set; }
+        public string DstRepo { get; private set; }
+        public string DstServer { get; private set; }
 
-        internal Replica(
+        public Replica(
             string srcBranch,
             string srcRepo,
             string srcServer,
@@ -25,7 +25,7 @@ namespace Codice.SyncServerTrigger.Models
             DstServer = dstServer;
         }
 
-        internal static List<Replica> BuildPendingReplicas(
+        public static List<Replica> BuildPendingReplicas(
             string srcBranch,
             string srcRepo,
             string srcServer,
