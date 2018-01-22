@@ -64,7 +64,7 @@ namespace syncservertriggertests
                     dstServers,
                     repoMappings);
 
-            Assert.AreEqual(0, pendingReplicas.Count);
+            Assert.AreEqual(2, pendingReplicas.Count);
 
             Replica firstExpectedReplica = new Replica(
                 srcBranch, srcRepo, srcServer, "default_myserver", dstServers[0]);
