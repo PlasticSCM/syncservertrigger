@@ -4,14 +4,14 @@ using System.Text.RegularExpressions;
 
 namespace Codice.SyncServerTrigger.Models
 {
-    internal class Changeset
+    public class Changeset
     {
-        internal double CsetId { get; private set; }
-        internal string BranchName { get; private set; }
-        internal string RepositoryName { get; private set; }
-        internal string ServerName { get; private set; }
+        public double CsetId { get; private set; }
+        public string BranchName { get; private set; }
+        public string RepositoryName { get; private set; }
+        public string ServerName { get; private set; }
 
-        internal Changeset(
+        public Changeset(
             double csetId,
             string branchName,
             string repositoryName,
@@ -23,7 +23,7 @@ namespace Codice.SyncServerTrigger.Models
             ServerName = serverName;
         }
 
-        internal static List<Changeset> ParsePlasticChangesetEnvironVar(
+        public static List<Changeset> ParsePlasticChangesetEnvironVar(
             string environVarValue)
         {
             if (string.IsNullOrEmpty(environVarValue))
@@ -51,7 +51,7 @@ namespace Codice.SyncServerTrigger.Models
 
             return new Changeset(
                 double.Parse(match.Groups["id"].Value),
-                match.Groups["branchName"].Value,
+                match.Groups["brName"].Value,
                 match.Groups["repName"].Value,
                 match.Groups["repServer"].Value);
         }
