@@ -80,6 +80,8 @@ namespace Codice.SyncServerTrigger.Commands
             List<RepoMapping> mappings,
             string csetSpecs)
         {
+            Console.WriteLine("Running as after-checkin trigger...");
+
             List<Changeset> csets =
                 Changeset.ParsePlasticChangesetEnvironVar(csetSpecs);
 
@@ -91,11 +93,15 @@ namespace Codice.SyncServerTrigger.Commands
                     Replica.BuildPendingReplicas(
                         cset.BranchName,
                         cset.RepositoryName,
-                        cset.RepositoryName,
+                        cset.ServerName,
                         filteredRepos,
                         dstServers,
                         mappings));
             }
+
+            Console.WriteLine(
+                "Found {0} destinations to replicate to.",
+                pendingReplicas.Count);
 
             bool succeeded = true;
             foreach (Replica pendingReplica in pendingReplicas)
@@ -112,6 +118,8 @@ namespace Codice.SyncServerTrigger.Commands
             List<RepoMapping> mappings,
             string branchSpec)
         {
+            Console.WriteLine("Running as after-replicationwrite trigger...");
+
             Branch branchToReplicate =
                 Branch.ParsePlasticBranchEnvironVar(branchSpec);
 
@@ -123,6 +131,10 @@ namespace Codice.SyncServerTrigger.Commands
                     filteredRepos,
                     dstServers,
                     mappings);
+
+            Console.WriteLine(
+                "Found {0} destinations to replicate to.",
+                pendingReplicas.Count);
 
             bool succeeded = true;
             foreach (Replica pendingReplica in pendingReplicas)
@@ -141,6 +153,8 @@ namespace Codice.SyncServerTrigger.Commands
             string repoName,
             string serverName)
         {
+            Console.WriteLine("Running as after-makelabel trigger...");
+
             Branch branchToReplicate = null;
             if (!FindBranchForLabel(
                 labelName, repoName, serverName, out branchToReplicate))
@@ -156,6 +170,10 @@ namespace Codice.SyncServerTrigger.Commands
                     filteredRepos,
                     dstServers,
                     mappings);
+
+            Console.WriteLine(
+                "Found {0} destinations to replicate to.",
+                pendingReplicas.Count);
 
             bool succeeded = true;
             foreach (Replica pendingReplica in pendingReplicas)
@@ -220,7 +238,7 @@ namespace Codice.SyncServerTrigger.Commands
             string stdOut, stdErr;
 
             Console.WriteLine(
-                "Replicating br:/{0}@{1}@{2} to {3}@{4}",
+                "Replicating br:{0}@{1}@{2} to {3}@{4}",
                 replica.SrcBranch,
                 replica.SrcRepo,
                 replica.SrcServer,
@@ -228,7 +246,7 @@ namespace Codice.SyncServerTrigger.Commands
                 replica.DstServer);
 
             string cmdLine = string.Format(
-                "cm replicate --push br:/{0}@{1}@{2} {3}@{4}",
+                "cm replicate --push br:{0}@{1}@{2} {3}@{4}",
                 replica.SrcBranch,
                 replica.SrcRepo,
                 replica.SrcServer,
@@ -250,6 +268,7 @@ namespace Codice.SyncServerTrigger.Commands
                 "Command line: '{1}'{0}" +
                 "cm stdout: {2}{0}" +
                 "cm stderr: {3}{0}",
+                Environment.NewLine,
                 cmdLine,
                 stdOut,
                 stdErr);

@@ -15,7 +15,7 @@ namespace Codice.SyncServerTrigger.Commands
         void ICmd.Execute(string[] args)
         {
             if (args.Length <= 1
-                || args.Length >= 3
+                || args.Length > 5
                 || args[1].Contains("help"))
             {
                 Console.Error.WriteLine(Help);

@@ -129,8 +129,8 @@ namespace Codice.SyncServerTrigger.Commands
                 "Command line: '{2}'{0}" +
                 "cm stdout: {3}{0}" +
                 "cm stderr: {4}",
-                server,
                 Environment.NewLine,
+                server,
                 commandLine,
                 output,
                 error);
