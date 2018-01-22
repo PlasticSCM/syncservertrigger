@@ -2,7 +2,7 @@
 
 using Codice.SyncServerTrigger.Models;
 
-namespace syncservertriggertests
+namespace Codice.SyncServerTriggerTests
 {
     [TestClass]
     public class BranchTests

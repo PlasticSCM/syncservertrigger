@@ -7,7 +7,7 @@
     <ProjectGuid>{073D5782-47D2-4C42-9EFC-F8CD630568E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>syncservertriggertests</RootNamespace>
+    <RootNamespace>Codice.SyncServerTriggerTests</RootNamespace>
     <AssemblyName>syncservertriggertests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

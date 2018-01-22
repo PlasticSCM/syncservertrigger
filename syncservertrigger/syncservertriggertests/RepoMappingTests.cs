@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Codice.SyncServerTrigger.Models;
 
-namespace syncservertriggertests
+namespace CodiceSyncServerTriggerTests
 {
     [TestClass]
     public class RepoMappingTests

@@ -4,7 +4,7 @@ using Codice.SyncServerTrigger.Models;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace syncservertriggertests
+namespace Codice.SyncServerTriggerTests
 {
     [TestClass]
     public class ChangesetTests
