@@ -45,7 +45,11 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (args.Length == 2 && args[1] == Trigger.Names.AfterChAttVal)
             {
-                // TODO
+                runArgs = string.Format("run {0} \"{1}\" \"{2}\" \"{3}\"",
+                    Trigger.Names.AfterChAttVal,
+                    Utils.ReadStdInToEnd(),
+                    PlasticEnvironment.PlasticRepositoryName,
+                    PlasticEnvironment.PlasticServer);
             }
 
             if (string.IsNullOrEmpty(runArgs))
