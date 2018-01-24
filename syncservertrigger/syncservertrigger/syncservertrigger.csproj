@@ -54,6 +54,7 @@
     <Compile Include="commands\ServerCmd.cs" />
     <Compile Include="commands\TriggerCmd.cs" />
     <Compile Include="commands\UninstallCmd.cs" />
+    <Compile Include="commands\WarnEmailCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
     <Compile Include="models\Branch.cs" />
