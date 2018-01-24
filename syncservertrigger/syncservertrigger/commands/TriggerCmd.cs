@@ -7,15 +7,15 @@ namespace Codice.SyncServerTrigger.Commands
 {
     internal class TriggerCmd : ICmd
     {
-        public string Help { get { return HELP; } }
+        string ICmd.Help { get { return HELP; } }
 
-        public string CommandName { get { return "trigger"; } }
+        string ICmd.CommandName { get { return "trigger"; } }
 
         void ICmd.Execute(string[] args)
         {
             if (args.Length == 1 || args.Length > 2)
             {
-                Console.Error.WriteLine(Help);
+                Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 
@@ -54,7 +54,7 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (string.IsNullOrEmpty(runArgs))
             {
-                Console.Error.WriteLine(Help);
+                Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 

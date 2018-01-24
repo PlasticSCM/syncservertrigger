@@ -15,15 +15,15 @@ namespace Codice.SyncServerTrigger.Commands
 
     internal class InstallCmd : ICmd
     {
-        public string Help { get { return HELP; } }
+        string ICmd.Help { get { return HELP; } }
 
-        public string CommandName { get { return "install"; } }
+        string ICmd.CommandName { get { return "install"; } }
 
         void ICmd.Execute(string[] args)
         {
             if (args.Length >= 2 && args[1].Contains("help"))
             {
-                Console.Error.WriteLine(Help);
+                Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 

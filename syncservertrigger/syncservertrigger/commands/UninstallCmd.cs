@@ -8,9 +8,9 @@ namespace Codice.SyncServerTrigger.Commands
 {
     internal class UninstallCmd : ICmd
     {
-        public string Help { get { return HELP; } }
+        string ICmd.Help { get { return HELP; } }
 
-        public string CommandName { get { return "uninstall"; } }
+        string ICmd.CommandName { get { return "uninstall"; } }
 
         void ICmd.Execute(string[] args)
         {

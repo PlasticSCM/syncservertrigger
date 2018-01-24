@@ -8,9 +8,9 @@ namespace Codice.SyncServerTrigger.Commands
 {
     internal class RepomapCmd : ICmd
     {
-        public string Help { get { return HELP; } }
+        string ICmd.Help { get { return HELP; } }
 
-        public string CommandName { get { return "repomap"; } }
+        string ICmd.CommandName { get { return "repomap"; } }
 
         void ICmd.Execute(string[] args)
         {
@@ -18,7 +18,7 @@ namespace Codice.SyncServerTrigger.Commands
                 || args.Length > 5
                 || args[1].Contains("help"))
             {
-                Console.Error.WriteLine(Help);
+                Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 
@@ -40,7 +40,7 @@ namespace Codice.SyncServerTrigger.Commands
                 return;
             }
 
-            Console.Error.WriteLine(Help);
+            Console.Error.WriteLine(HELP);
             Environment.Exit(1);
         }
 

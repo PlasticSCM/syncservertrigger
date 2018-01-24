@@ -8,15 +8,15 @@ namespace Codice.SyncServerTrigger.Commands
 {
     internal class RunCmd : ICmd
     {
-        public string Help { get { return HELP; } }
+        string ICmd.Help { get { return HELP; } }
 
-        public string CommandName { get { return "run"; } }
+        string ICmd.CommandName { get { return "run"; } }
 
         void ICmd.Execute(string[] args)
         {
             if (args.Length == 1 || args.Length > 5)
             {
-                Console.Error.WriteLine(Help);
+                Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 
