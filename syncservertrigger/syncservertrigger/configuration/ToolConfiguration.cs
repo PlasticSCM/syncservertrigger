@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using Codice.SyncServerTrigger.Models;
 
@@ -46,6 +45,15 @@ namespace Codice.SyncServerTrigger.Configuration
             }
         }
 
+        internal EmailConfiguration EmailConfig
+        {
+            get
+            {
+                return new EmailConfiguration(
+                    mConfigFile.GetSection(EMAIL_CONFIG_SECTION_NAME));
+            }
+        }
+
         internal void Save()
         {
             mConfigFile.Save();
@@ -85,6 +93,7 @@ namespace Codice.SyncServerTrigger.Configuration
         const string SERVER_SECTION_NAME = "servers";
         const string REPO_FILTER_SECTION_NAME = "repofilters";
         const string REPO_MAP_SECTION_NAME = "repomappings";
+        const string EMAIL_CONFIG_SECTION_NAME = "email";
     }
 
     internal class ServerConfiguration
@@ -186,5 +195,78 @@ namespace Codice.SyncServerTrigger.Configuration
 
         const string FORMAT = "{0}#{1}";
         static readonly char[] SEPARATOR = new char[] { '#' };
+    }
+
+    internal class EmailConfiguration
+    {
+        internal EmailConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        internal string SmptServer
+        {
+            get { return mSection.GetString(SMTP_SERVER_KEY, string.Empty); }
+            set { mSection.SetString(SMTP_SERVER_KEY, value); }
+        }
+
+        internal bool EnableSsl
+        {
+            get { return mSection.GetBool(ENABLE_SSL_KEY, false); }
+            set { mSection.SetBool(ENABLE_SSL_KEY, value); }
+        }
+
+        internal int Port
+        {
+            get { return mSection.GetInt(PORT_KEY, 587); }
+            set { mSection.SetInt(PORT_KEY, value); }
+        }
+
+        internal string SourceEmail
+        {
+            get { return mSection.GetString(EMAIL_KEY, string.Empty); }
+            set { mSection.SetString(EMAIL_KEY, value); }
+        }
+
+        internal string Password
+        {
+            get
+            {
+                return Utils.Decrypt(
+                    mSection.GetString(PASSWORD_KEY, string.Empty));
+            }
+
+            set { mSection.SetString(PASSWORD_KEY, Utils.Encrypt(value)); }
+        }
+
+        internal List<string> GetDestinationEmails()
+        {
+            return mSection.GetStringList(
+                DESTINATION_EMAILS_KEY, new string[] { });
+        }
+
+        internal void AddDestinationEmail(string email)
+        {
+            List<string> destinationEmails = GetDestinationEmails();
+            destinationEmails.Add(email);
+            mSection.SetStringList(DESTINATION_EMAILS_KEY, destinationEmails);
+        }
+
+        internal void RemoveDestinationEmail(string email)
+        {
+            List<string> destinationEmails = GetDestinationEmails();
+            destinationEmails.RemoveAll(
+                item => item.Equals(
+                    email, StringComparison.InvariantCultureIgnoreCase));
+            mSection.SetStringList(DESTINATION_EMAILS_KEY, destinationEmails);
+        }
+
+        ConfigurationSection mSection;
+        const string SMTP_SERVER_KEY = "stmpserver";
+        const string ENABLE_SSL_KEY = "enablessl";
+        const string PORT_KEY = "port";
+        const string EMAIL_KEY = "email";
+        const string PASSWORD_KEY = "password";
+        const string DESTINATION_EMAILS_KEY = "destinationemails";
     }
 }
