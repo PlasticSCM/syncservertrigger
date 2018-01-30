@@ -97,7 +97,7 @@ namespace Codice.SyncServerTrigger.Commands
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             toolConfig.RuntimeConfig.MonoRuntimePath =
-                Utils.ReadLine("Enter Mono runtime path", defaultPath);
+                ConsoleUtils.ReadLine("Enter Mono runtime path", defaultPath);
             toolConfig.Save();
         }
 

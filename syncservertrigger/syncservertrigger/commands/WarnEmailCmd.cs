@@ -52,11 +52,11 @@ namespace Codice.SyncServerTrigger.Commands
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             EmailConfiguration emailConfig = toolConfig.EmailConfig;
 
-            emailConfig.SmptServer = Utils.ReadLine("SMTP server address");
-            emailConfig.EnableSsl = Utils.ReadBool("Enable SSL");
-            emailConfig.Port = Utils.ReadInt("Port number");
-            emailConfig.SourceEmail = Utils.ReadLine("Email account");
-            emailConfig.Password = Utils.ReadPassword("Password");
+            emailConfig.SmptServer = ConsoleUtils.ReadLine("SMTP server address");
+            emailConfig.EnableSsl = ConsoleUtils.ReadBool("Enable SSL");
+            emailConfig.Port = ConsoleUtils.ReadInt("Port number");
+            emailConfig.SourceEmail = ConsoleUtils.ReadLine("Email account");
+            emailConfig.Password = ConsoleUtils.ReadPassword("Password");
 
             toolConfig.Save();
             Console.WriteLine("The account was correctly configured!");

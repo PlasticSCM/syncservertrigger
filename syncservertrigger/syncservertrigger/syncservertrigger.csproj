@@ -57,6 +57,7 @@
     <Compile Include="commands\WarnEmailCmd.cs" />
     <Compile Include="configuration\ConfigurationFile.cs" />
     <Compile Include="configuration\ToolConfiguration.cs" />
+    <Compile Include="ConsoleUtils.cs" />
     <Compile Include="ErrorEmailSender.cs" />
     <Compile Include="models\Branch.cs" />
     <Compile Include="models\Changeset.cs" />
