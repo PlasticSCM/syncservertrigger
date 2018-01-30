@@ -46,6 +46,17 @@ namespace Codice.SyncServerTrigger
             return answer;
         }
 
+        internal static string ReadLine(string promptLine, string defaultValue)
+        {
+            string prompt = string.Format(
+                "{0} [{1}]: ", promptLine, defaultValue);
+
+            Console.Write(prompt);
+
+            string answer = Console.ReadLine();
+            return string.IsNullOrEmpty(answer) ? defaultValue : answer;
+        }
+
         internal static string ReadPassword(string promptLine)
         {
             Console.Write("{0}: ", promptLine);

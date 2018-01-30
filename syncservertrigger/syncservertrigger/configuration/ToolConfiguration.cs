@@ -18,6 +18,15 @@ namespace Codice.SyncServerTrigger.Configuration
             return new ToolConfiguration(LoadConfigFile(ConfigFileName));
         }
 
+        internal RuntimeConfiguration RuntimeConfig
+        {
+            get
+            {
+                return new RuntimeConfiguration(
+                    mConfigFile.GetSection(RUNTIME_SECTION_NAME));
+            }
+        }
+
         internal ServerConfiguration ServerConfig
         {
             get
@@ -90,10 +99,28 @@ namespace Codice.SyncServerTrigger.Configuration
         ConfigurationFile mConfigFile;
 
         const string ConfigFileName = "syncservertrigger.conf";
+        const string RUNTIME_SECTION_NAME = "runtime";
         const string SERVER_SECTION_NAME = "servers";
         const string REPO_FILTER_SECTION_NAME = "repofilters";
         const string REPO_MAP_SECTION_NAME = "repomappings";
         const string EMAIL_CONFIG_SECTION_NAME = "email";
+    }
+
+    internal class RuntimeConfiguration
+    {
+        internal RuntimeConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        internal string MonoRuntimePath
+        {
+            get { return mSection.GetString(RUNTIME_PATH_KEY, string.Empty); }
+            set { mSection.SetString(RUNTIME_PATH_KEY, value); }
+        }
+
+        ConfigurationSection mSection;
+        const string RUNTIME_PATH_KEY = "runtimepath";
     }
 
     internal class ServerConfiguration

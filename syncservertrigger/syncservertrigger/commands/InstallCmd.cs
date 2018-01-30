@@ -65,6 +65,9 @@ namespace Codice.SyncServerTrigger.Commands
                 "Using syncservertrigger located at {0}.",
                 executablePath);
 
+            if (!PlatformUtils.IsWindows)
+                InitializeMonoRuntimePath();
+
             if (!InstallTrigger(Trigger.Names.AfterCi, TriggerNames.AfterCi, executablePath, srcServer)
                 || !InstallTrigger(Trigger.Names.AfterRW, TriggerNames.AfterReplication, executablePath, srcServer)
                 || !InstallTrigger(Trigger.Names.AfterMkLb, TriggerNames.AfterMkLabel, executablePath, srcServer)
@@ -84,6 +87,18 @@ namespace Codice.SyncServerTrigger.Commands
             toolConfig.Save();
 
             Console.WriteLine("Server '{0}' correctly added!", dstServer);
+        }
+
+        static void InitializeMonoRuntimePath()
+        {
+            string defaultPath = PlatformUtils.CurrentPlatform == Platform.Linux
+                ? "/opt/plasticscm5/mono/bin/mono"
+                : "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono";
+
+            ToolConfiguration toolConfig = ToolConfiguration.Load();
+            toolConfig.RuntimeConfig.MonoRuntimePath =
+                Utils.ReadLine("Enter Mono runtime path", defaultPath);
+            toolConfig.Save();
         }
 
         static bool InstallTrigger(
@@ -139,10 +154,23 @@ namespace Codice.SyncServerTrigger.Commands
         static string GetCommandLine(
             string triggerType, string triggerName, string executablePath, string server)
         {
+            if (PlatformUtils.IsWindows)
+            {
+                return string.Format(
+                    "cm maketrigger {0} \"{1}\" \"{2} trigger {0}\" --server={3}",
+                    triggerType,
+                    triggerName,
+                    executablePath,
+                    server);
+            }
+
+            ToolConfiguration toolConfig = ToolConfiguration.Load();
+
             return string.Format(
-                "cm maketrigger {0} \"{1}\" \"{2} trigger {0}\" --server={3}",
+                "cm maketrigger {0} \"{1}\" \"{2} {3} trigger {0}\" --server={4}",
                 triggerType,
                 triggerName,
+                toolConfig.RuntimeConfig.MonoRuntimePath,
                 executablePath,
                 server);
         }

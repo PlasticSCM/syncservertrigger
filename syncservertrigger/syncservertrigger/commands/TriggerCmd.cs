@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Codice.SyncServerTrigger.Configuration;
 using Codice.SyncServerTrigger.Models;
 
 namespace Codice.SyncServerTrigger.Commands
@@ -63,12 +64,32 @@ namespace Codice.SyncServerTrigger.Commands
 
         static Process BuildSyncServerTriggerProcess(string args)
         {
-            Process result = new Process();
-            result.StartInfo.FileName = Utils.GetAssemblyLocation();
-            result.StartInfo.Arguments = args;
+            Process result = PlatformUtils.IsWindows
+                ? BuildSyncServerTriggerProcessForWindows(args)
+                : BuildSyncServerTriggerProcessForUnixLike(args);
+
 #if !DEBUG
             result.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 #endif
+            return result;
+        }
+
+        static Process BuildSyncServerTriggerProcessForWindows(string args)
+        {
+            Process result = new Process();
+            result.StartInfo.FileName = Utils.GetAssemblyLocation();
+            result.StartInfo.Arguments = args;
+            return result;
+        }
+
+        static Process BuildSyncServerTriggerProcessForUnixLike(string args)
+        {
+            ToolConfiguration toolConfig = ToolConfiguration.Load();
+
+            Process result = new Process();
+            result.StartInfo.FileName = toolConfig.RuntimeConfig.MonoRuntimePath;
+            result.StartInfo.Arguments = string.Format(
+                "{0} {1}", Utils.GetAssemblyLocation(), args);
             return result;
         }
 

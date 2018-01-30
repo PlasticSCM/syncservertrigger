@@ -285,7 +285,7 @@ namespace Codice.SyncServerTrigger.Commands
             string stdOut, stdErr;
 
             string cmdLine = string.Format(
-                "cm find labels where name='{0}' --format=\"{{branch}}@rep:{1}@{2}\" on repository '{1}@{2}' --nototal",
+                "cm find labels where name=\"'{0}'\" --format=\"{{branch}}@rep:{1}@{2}\" on repository \"'{1}@{2}'\" --nototal",
                 labelName,
                 repositoryName,
                 serverName);
@@ -333,7 +333,7 @@ namespace Codice.SyncServerTrigger.Commands
             string stdOut, stdErr;
 
             string cmdLine = string.Format(
-                "cm find changesets where changesetid={0} --format=\"{{branch}}@rep:{1}@{2}\" on repository '{1}@{2}' --nototal",
+                "cm find changesets where changesetid={0} --format=\"{{branch}}@rep:{1}@{2}\" on repository \"'{1}@{2}'\" --nototal",
                 changesetId,
                 repositoryName,
                 serverName);
