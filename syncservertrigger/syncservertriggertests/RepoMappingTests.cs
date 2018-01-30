@@ -23,7 +23,7 @@ namespace CodiceSyncServerTriggerTests
                 new List<string>() { repoMapping.ToConfigurationString() };
 
             List<RepoMapping> parsedRepoMappings =
-                RepoMapping.ParseFromConfiguration(configuration);
+                RepoMapping.ParseConfiguration(configuration);
 
             Assert.AreEqual(1, parsedRepoMappings.Count);
 

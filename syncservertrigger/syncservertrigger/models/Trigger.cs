@@ -6,7 +6,13 @@ namespace Codice.SyncServerTrigger.Models
     internal class Trigger
     {
         // From 'cm listtriggers --help'
-        internal const string CmFormat = "{0}#{1}#{2}#{3}#{4}#{5}";
+        // {0} -> Position
+        // {1} -> Name
+        // {2} -> Path
+        // {3} -> Owner
+        // {4} -> Type
+        // {5} -> Filter
+        internal const string CM_FORMAT = "{0}#{1}#{2}#{3}#{4}#{5}";
 
         internal static class Names
         {
@@ -39,7 +45,7 @@ namespace Codice.SyncServerTrigger.Models
             Filter = filter;
         }
 
-        internal static List<Trigger> ParseFind(string cmOutput)
+        internal static List<Trigger> ParseCmListTriggersOutput(string cmOutput)
         {
             if (string.IsNullOrEmpty(cmOutput))
                 return new List<Trigger>();

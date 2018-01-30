@@ -194,7 +194,7 @@ namespace Codice.SyncServerTrigger.Configuration
 
         internal List<RepoMapping> GetMappedRepos()
         {
-            return RepoMapping.ParseFromConfiguration(
+            return RepoMapping.ParseConfiguration(
                 mSection.GetStringList(MAPS_KEY, new string[] { }));
         }
 

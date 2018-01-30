@@ -23,21 +23,24 @@ namespace Codice.SyncServerTrigger.Commands
             string runArgs = string.Empty;
             if (args.Length == 2 && args[1] == Trigger.Names.AfterCi)
             {
-                runArgs = string.Format("run {0} \"{1}\"",
+                runArgs = string.Format(
+                    "run {0} \"{1}\"",
                     Trigger.Names.AfterCi,
                     PlasticEnvironment.PlasticChangeset);
             }
 
             if (args.Length == 2 && args[1] == Trigger.Names.AfterRW)
             {
-                runArgs = string.Format("run {0} \"{1}\"",
+                runArgs = string.Format(
+                    "run {0} \"{1}\"",
                     Trigger.Names.AfterRW,
                     PlasticEnvironment.PlasticBranch);
             }
 
             if (args.Length == 2 && args[1] == Trigger.Names.AfterMkLb)
             {
-                runArgs = string.Format("run {0} \"{1}\" \"{2}\" \"{3}\"",
+                runArgs = string.Format(
+                    "run {0} \"{1}\" \"{2}\" \"{3}\"",
                     Trigger.Names.AfterMkLb,
                     PlasticEnvironment.PlasticLabelName,
                     PlasticEnvironment.PlasticRepositoryName,
@@ -46,7 +49,8 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (args.Length == 2 && args[1] == Trigger.Names.AfterChAttVal)
             {
-                runArgs = string.Format("run {0} \"{1}\" \"{2}\" \"{3}\"",
+                runArgs = string.Format(
+                    "run {0} \"{1}\" \"{2}\" \"{3}\"",
                     Trigger.Names.AfterChAttVal,
                     Utils.ReadStdInToEnd(),
                     PlasticEnvironment.PlasticRepositoryName,
@@ -62,34 +66,31 @@ namespace Codice.SyncServerTrigger.Commands
             BuildSyncServerTriggerProcess(runArgs).Start();
         }
 
-        static Process BuildSyncServerTriggerProcess(string args)
+        static Process BuildSyncServerTriggerProcess(string runArgs)
         {
             Process result = PlatformUtils.IsWindows
-                ? BuildSyncServerTriggerProcessForWindows(args)
-                : BuildSyncServerTriggerProcessForUnixLike(args);
+                ? BuildSyncServerTriggerProcessForWindows(runArgs)
+                : BuildSyncServerTriggerProcessForUnixLike(runArgs);
 
-#if !DEBUG
             result.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-#endif
             return result;
         }
 
-        static Process BuildSyncServerTriggerProcessForWindows(string args)
+        static Process BuildSyncServerTriggerProcessForWindows(string runArgs)
         {
             Process result = new Process();
             result.StartInfo.FileName = Utils.GetAssemblyLocation();
-            result.StartInfo.Arguments = args;
+            result.StartInfo.Arguments = runArgs;
             return result;
         }
 
-        static Process BuildSyncServerTriggerProcessForUnixLike(string args)
+        static Process BuildSyncServerTriggerProcessForUnixLike(string runArgs)
         {
             ToolConfiguration toolConfig = ToolConfiguration.Load();
 
             Process result = new Process();
             result.StartInfo.FileName = toolConfig.RuntimeConfig.MonoRuntimePath;
-            result.StartInfo.Arguments = string.Format(
-                "{0} {1}", Utils.GetAssemblyLocation(), args);
+            result.StartInfo.Arguments = $"{Utils.GetAssemblyLocation()} {runArgs}";
             return result;
         }
 

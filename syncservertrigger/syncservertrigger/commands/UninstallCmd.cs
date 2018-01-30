@@ -14,14 +14,13 @@ namespace Codice.SyncServerTrigger.Commands
 
         void ICmd.Execute(string[] args)
         {
-            if (args.Length != 2 || args[1].Contains("help"))
+            if (args.Length == 1 || args.Length > 2)
             {
                 Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 
             string srcServer = args[1];
-
             if (!Utils.CheckServerSpec(srcServer))
             {
                 Console.Error.WriteLine(
@@ -41,23 +40,23 @@ namespace Codice.SyncServerTrigger.Commands
                 TriggerNames.AfterChAtt
             };
 
-            List<Trigger> triggersToUninstall = triggers.FindAll(
-                trigger => triggerNames.Contains(trigger.Name));
+            triggers.RemoveAll(trigger => !triggerNames.Contains(trigger.Name));
 
-            if (triggersToUninstall.Count == 0)
+            if (triggers.Count == 0)
             {
                 Console.WriteLine("No triggers to uninstall!");
                 return;
             }
 
-            foreach (Trigger trigger in triggersToUninstall)
+            foreach (Trigger trigger in triggers)
             {
                 if (!UninstallTrigger(trigger, srcServer))
                     Environment.Exit(1);
             }
 
             Console.WriteLine(
-                "Triggers successfully uninstalled from {0}!", srcServer);
+                "Triggers successfully uninstalled from {0}!",
+                srcServer);
         }
 
         static bool ListTriggers(string server, out List<Trigger> triggers)
@@ -67,7 +66,7 @@ namespace Codice.SyncServerTrigger.Commands
 
             string cmdLine = string.Format(
                 "cm listtriggers --format={0} --server={1}",
-                Trigger.CmFormat,
+                Trigger.CM_FORMAT,
                 server);
 
             result = CmdRunner.CmdRunner.ExecuteCommandWithResult(
@@ -79,7 +78,7 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (result == 0)
             {
-                triggers = Trigger.ParseFind(stdOut);
+                triggers = Trigger.ParseCmListTriggersOutput(stdOut);
                 return true;
             }
 

@@ -7,10 +7,10 @@ namespace Codice.SyncServerTrigger.Commands
 {
     internal static class TriggerNames
     {
-        internal const string AfterCi = "sync afterci";
-        internal const string AfterReplication = "sync afterreplication";
-        internal const string AfterMkLabel = "sync aftermklabel";
-        internal const string AfterChAtt = "sync afterchatt";
+        internal const string AfterCi = "sync-afterci";
+        internal const string AfterReplication = "sync-afterreplication";
+        internal const string AfterMkLabel = "sync-aftermklabel";
+        internal const string AfterChAtt = "sync-afterchatt";
     }
 
     internal class InstallCmd : ICmd
@@ -21,32 +21,17 @@ namespace Codice.SyncServerTrigger.Commands
 
         void ICmd.Execute(string[] args)
         {
-            if (args.Length >= 2 && args[1].Contains("help"))
-            {
-                Console.Error.WriteLine(HELP);
-                Environment.Exit(1);
-            }
-
-            if (args.Length != 3)
+            if (args.Length == 1 || args.Length > 3)
             {
                 Console.Error.WriteLine(HELP);
                 Environment.Exit(1);
             }
 
             string srcServer = args[1];
-            string dstServer = args[2];
-
             if (!Utils.CheckServerSpec(srcServer))
             {
                 Console.Error.WriteLine(
                     "The server spec is not correct: {0}", srcServer);
-                Environment.Exit(1);
-            }
-
-            if (!Utils.CheckServerSpec(dstServer))
-            {
-                Console.Error.WriteLine(
-                    "The server spec is not correct: {0}", dstServer);
                 Environment.Exit(1);
             }
 
@@ -79,25 +64,39 @@ namespace Codice.SyncServerTrigger.Commands
             Console.WriteLine(
                 "Triggers successfully installed in {0}!", srcServer);
 
+            if (args.Length != 3)
+                return;
+
+            string dstServer = args[2];
+            if (!Utils.CheckServerSpec(dstServer))
+            {
+                Console.Error.WriteLine(
+                    "The server spec is not correct: {0}",
+                    dstServer);
+                Environment.Exit(1);
+            }
+
             Console.WriteLine(
-                "Adding '{0}' as the first destination server.", dstServer);
+                "Adding '{0}' as the first destination server.",
+                dstServer);
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             toolConfig.ServerConfig.AddServer(dstServer);
             toolConfig.Save();
 
-            Console.WriteLine("Server '{0}' correctly added!", dstServer);
+            Console.WriteLine(
+                "Server '{0}' correctly added!",
+                dstServer);
         }
 
         static void InitializeMonoRuntimePath()
         {
-            string defaultPath = PlatformUtils.CurrentPlatform == Platform.Linux
-                ? "/opt/plasticscm5/mono/bin/mono"
-                : "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono";
-
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             toolConfig.RuntimeConfig.MonoRuntimePath =
-                ConsoleUtils.ReadLine("Enter Mono runtime path", defaultPath);
+                ConsoleUtils.ReadLine(
+                    "Enter Mono runtime path",
+                    PlatformUtils.DefaultMonoRuntimePath);
+
             toolConfig.Save();
         }
 
@@ -113,7 +112,8 @@ namespace Codice.SyncServerTrigger.Commands
             string cmdLine = GetCommandLine(
                 triggerType, triggerName, executablePath, server);
 
-            Console.WriteLine("Installing trigger '{0}' (type '{1}').",
+            Console.WriteLine(
+                "Installing trigger '{0}' (type '{1}').",
                 triggerName,
                 triggerType);
 
@@ -180,7 +180,7 @@ namespace Codice.SyncServerTrigger.Commands
                 sync.
 
 Usage: 
-    install <src_server> <dst_server>
+    install <src_server> [dst_server]
     
     src_server  The source repository, where the server-side triggers will
                 actually be installed.

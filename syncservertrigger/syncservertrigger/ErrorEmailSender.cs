@@ -35,24 +35,27 @@ namespace Codice.SyncServerTrigger
             string subject,
             string body)
         {
-            MailMessage result = new MailMessage();
-            result.Sender = new MailAddress(from);
+            MailMessage result = new MailMessage
+            {
+                Sender = new MailAddress(from),
+                Subject = subject,
+                Body = body
+            };
             result.To.Add(to);
-            result.Subject = subject;
-            result.Body = body;
 
             return result;
         }
 
         static SmtpClient BuildSmtpClient(EmailConfiguration emailConfiguration)
         {
-            SmtpClient result = new SmtpClient();
-            result.Port = emailConfiguration.Port;
-            result.Credentials = new NetworkCredential(
-                emailConfiguration.SourceEmail, emailConfiguration.Password);
-            result.EnableSsl = emailConfiguration.EnableSsl;
-
-            return result;
+            return new SmtpClient
+            {
+                Port = emailConfiguration.Port,
+                Credentials = new NetworkCredential(
+                    emailConfiguration.SourceEmail,
+                    emailConfiguration.Password),
+                EnableSsl = emailConfiguration.EnableSsl
+            };
         }
 
         EmailConfiguration mEmailConfiguration;

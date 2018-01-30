@@ -15,7 +15,7 @@ namespace Codice.SyncServerTrigger
                 Environment.Exit(1);
             }
 
-            mCommands = GetCommands();
+            mCommands = InitializeCommands();
 
             ICmd command;
             if (!mCommands.TryGetValue(args[0], out command))
@@ -27,7 +27,7 @@ namespace Codice.SyncServerTrigger
             command.Execute(args);
         }
 
-        static Dictionary<string, ICmd> GetCommands()
+        static Dictionary<string, ICmd> InitializeCommands()
         {
             Dictionary<string, ICmd> result =
                 new Dictionary<string, ICmd>(StringComparer.InvariantCultureIgnoreCase);
@@ -86,7 +86,7 @@ install         Autoinstalls the required triggers to have the two servers in
                 sync.
 
 Usage: 
-    install <src_server> <dst_server>
+    install <src_server> [dst_server]
     
     src_server  The source repository, where the server-side triggers will
                 actually be installed.

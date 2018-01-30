@@ -27,6 +27,25 @@ namespace Codice.SyncServerTrigger
             }
         }
 
+        public static string DefaultMonoRuntimePath
+        {
+            get
+            {
+                switch (CurrentPlatform)
+                {
+                    case Platform.Windows:
+                        return string.Empty;
+
+                    case Platform.MacOS:
+                        return "/Library/Frameworks/Mono.framework/Versions/Current/Commands/mono";
+
+                    default:
+                    case Platform.Linux:
+                        return "/opt/plasticscm5/mono/bin/mono";
+                }
+            }
+        }
+
         public static Platform CurrentPlatform
         {
             get { return GetCurrentPlatform(); }

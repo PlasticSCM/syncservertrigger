@@ -22,14 +22,14 @@ namespace Codice.SyncServerTrigger.Models
             return string.Format(FORMAT_STR, SrcRepo, DstRepo, DstServer);
         }
 
-        public static List<RepoMapping> ParseFromConfiguration(
+        public static List<RepoMapping> ParseConfiguration(
             List<string> configuration)
         {
             List<RepoMapping> result = new List<RepoMapping>();
 
             foreach (string configLine in configuration)
             {
-                RepoMapping repoMapping = ParseFromLine(configLine);
+                RepoMapping repoMapping = FromConfigurationString(configLine);
                 if (repoMapping != null)
                     result.Add(repoMapping);
             }
@@ -37,7 +37,7 @@ namespace Codice.SyncServerTrigger.Models
             return result;
         }
 
-        static RepoMapping ParseFromLine(string line)
+        public static RepoMapping FromConfigurationString(string line)
         {
             Match match = CONFIG_REGEX.Match(line);
 

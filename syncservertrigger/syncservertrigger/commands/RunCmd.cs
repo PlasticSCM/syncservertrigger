@@ -72,11 +72,6 @@ namespace Codice.SyncServerTrigger.Commands
                     args[4],
                     emailSender);
             }
-
-#if DEBUG
-            Console.WriteLine("Finished! Press ENTER to leave.");
-            Console.ReadLine();
-#endif
         }
 
         static void RunAfterCheckin(
