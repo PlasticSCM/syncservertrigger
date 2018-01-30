@@ -259,11 +259,11 @@ namespace Codice.SyncServerTrigger.Configuration
         {
             get
             {
-                return Utils.Decrypt(
+                return Crypto.Decrypt(
                     mSection.GetString(PASSWORD_KEY, string.Empty));
             }
 
-            set { mSection.SetString(PASSWORD_KEY, Utils.Encrypt(value)); }
+            set { mSection.SetString(PASSWORD_KEY, Crypto.Encrypt(value)); }
         }
 
         internal List<string> GetDestinationEmails()
