@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 using Codice.SyncServerTrigger.Configuration;
 using Codice.SyncServerTrigger.Models;
@@ -25,60 +26,51 @@ namespace Codice.SyncServerTrigger.Commands
             List<string> dstServers = toolConfig.ServerConfig.GetServers();
             List<RepoMapping> repoMappings = toolConfig.RepoMapConfig.GetMappedRepos();
 
+            ErrorEmailSender emailSender =
+                new ErrorEmailSender(toolConfig.EmailConfig);
+
             if (args.Length == 3 && args[1] == Trigger.Names.AfterCi)
             {
-                if (!RunAfterCheckin(
+                RunAfterCheckin(
                     filteredRepos,
                     dstServers,
                     repoMappings,
-                    args[2]))
-                {
-                    Console.WriteLine("The replication process failed.");
-                    // TODO send email
-                }
+                    args[2],
+                    emailSender);
             }
 
             if (args.Length == 3 && args[1] == Trigger.Names.AfterRW)
             {
-                if (!RunAfterReplicationWrite(
-                        filteredRepos,
-                        dstServers,
-                        repoMappings,
-                        args[2]))
-                {
-                    Console.WriteLine("The replication process failed.");
-                    // TODO send email
-                }
+                RunAfterReplicationWrite(
+                    filteredRepos,
+                    dstServers,
+                    repoMappings,
+                    args[2],
+                    emailSender);
             }
 
             if (args.Length == 5 && args[1] == Trigger.Names.AfterMkLb)
             {
-                if (!RunAfterMakeLabel(
-                        filteredRepos,
-                        dstServers,
-                        repoMappings,
-                        labelName: args[2],
-                        repoName: args[3],
-                        serverName: args[4]))
-                {
-                    Console.WriteLine("The replication process failed.");
-                    // TODO send email
-                }
+                RunAfterMakeLabel(
+                    filteredRepos,
+                    dstServers,
+                    repoMappings,
+                    args[2],
+                    args[3],
+                    args[4],
+                    emailSender);
             }
 
             if (args.Length == 5 && args[1] == Trigger.Names.AfterChAttVal)
             {
-                if (!RunAfterChangeAttributeValue(
+                RunAfterChangeAttributeValue(
                     filteredRepos,
                     dstServers,
                     repoMappings,
-                    triggerStdIn: args[2],
-                    repoName: args[3],
-                    serverName: args[4]))
-                {
-                    Console.WriteLine("The replication process failed.");
-                    // TODO send email
-                }
+                    args[2],
+                    args[3],
+                    args[4],
+                    emailSender);
             }
 
 #if DEBUG
@@ -87,11 +79,12 @@ namespace Codice.SyncServerTrigger.Commands
 #endif
         }
 
-        static bool RunAfterCheckin(
+        static void RunAfterCheckin(
             List<string> filteredRepos,
             List<string> dstServers,
             List<RepoMapping> mappings,
-            string csetSpecs)
+            string csetSpecs,
+            ErrorEmailSender emailSender)
         {
             Console.WriteLine("Running as after-checkin trigger...");
 
@@ -116,20 +109,25 @@ namespace Codice.SyncServerTrigger.Commands
                 "Found {0} destinations to replicate to.",
                 pendingReplicas.Count);
 
-            bool succeeded = true;
+            List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
             {
-                succeeded = succeeded && Replicate(pendingReplica);
+                if (!Replicate(pendingReplica))
+                    failedReplicas.Add(pendingReplica);
             }
 
-            return succeeded;
+            NotifyFailedReplicas(
+                "after-checkin",
+                failedReplicas,
+                emailSender);
         }
 
-        static bool RunAfterReplicationWrite(
+        static void RunAfterReplicationWrite(
             List<string> filteredRepos,
             List<string> dstServers,
             List<RepoMapping> mappings,
-            string branchSpec)
+            string branchSpec,
+            ErrorEmailSender emailSender)
         {
             Console.WriteLine("Running as after-replicationwrite trigger...");
 
@@ -149,22 +147,27 @@ namespace Codice.SyncServerTrigger.Commands
                 "Found {0} destinations to replicate to.",
                 pendingReplicas.Count);
 
-            bool succeeded = true;
+            List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
             {
-                succeeded = succeeded && Replicate(pendingReplica);
+                if (!Replicate(pendingReplica))
+                    failedReplicas.Add(pendingReplica);
             }
 
-            return succeeded;
+            NotifyFailedReplicas(
+                "after-replicationwrite",
+                failedReplicas,
+                emailSender);
         }
 
-        static bool RunAfterMakeLabel(
+        static void RunAfterMakeLabel(
             List<string> filteredRepos,
             List<string> dstServers,
             List<RepoMapping> mappings,
             string labelName,
             string repoName,
-            string serverName)
+            string serverName,
+            ErrorEmailSender emailSender)
         {
             Console.WriteLine("Running as after-makelabel trigger...");
 
@@ -172,7 +175,7 @@ namespace Codice.SyncServerTrigger.Commands
             if (!FindBranchForLabel(
                 labelName, repoName, serverName, out branchToReplicate))
             {
-                return false;
+                return;
             }
 
             List<Replica> pendingReplicas =
@@ -188,22 +191,27 @@ namespace Codice.SyncServerTrigger.Commands
                 "Found {0} destinations to replicate to.",
                 pendingReplicas.Count);
 
-            bool succeeded = true;
+            List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
             {
-                succeeded = succeeded && Replicate(pendingReplica);
+                if (!Replicate(pendingReplica))
+                    failedReplicas.Add(pendingReplica);
             }
 
-            return succeeded;
+            NotifyFailedReplicas(
+                "after-makelabel",
+                failedReplicas,
+                emailSender);
         }
 
-        static bool RunAfterChangeAttributeValue(
+        static void RunAfterChangeAttributeValue(
             List<string> filteredRepos,
             List<string> dstServers,
             List<RepoMapping> mappings,
             string triggerStdIn,
             string repoName,
-            string serverName)
+            string serverName,
+            ErrorEmailSender emailSender)
         {
             Console.WriteLine("Running as after-chattvalue trigger...");
 
@@ -228,7 +236,7 @@ namespace Codice.SyncServerTrigger.Commands
                 if (!FindBranchForLabel(
                     objectName, repoName, serverName, out branchToReplicate))
                 {
-                    return false;
+                    return;
                 }
             }
 
@@ -237,7 +245,7 @@ namespace Codice.SyncServerTrigger.Commands
                 if (!FindBranchForChangeset(
                     objectName, repoName, serverName, out branchToReplicate))
                 {
-                    return false;
+                    return;
                 }
             }
 
@@ -254,13 +262,17 @@ namespace Codice.SyncServerTrigger.Commands
                 "Found {0} destinations to replicate to.",
                 pendingReplicas.Count);
 
-            bool succeeded = true;
+            List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
             {
-                succeeded = succeeded && Replicate(pendingReplica);
+                if (!Replicate(pendingReplica))
+                    failedReplicas.Add(pendingReplica);
             }
 
-            return succeeded;
+            NotifyFailedReplicas(
+                "after-chattvalue",
+                failedReplicas,
+                emailSender);
         }
 
         static bool FindBranchForLabel(
@@ -401,6 +413,36 @@ namespace Codice.SyncServerTrigger.Commands
                 stdErr);
 
             return false;
+        }
+
+        static void NotifyFailedReplicas(
+            string triggerType,
+            List<Replica> failedReplicas,
+            ErrorEmailSender emailSender)
+        {
+            if (failedReplicas.Count == 0)
+                return;
+
+            string subject = string.Format(
+                "[syncservertrigger] {0} replication failed",
+                triggerType);
+
+            StringBuilder body = new StringBuilder();
+            body.AppendLine("The following replicas failed:");
+
+            foreach (Replica failedReplica in failedReplicas)
+            {
+                body.AppendLine(
+                    string.Format(
+                        "Source: br:{0}@rep:{1}@{2} --> Destination: rep:{3}@{4}",
+                        failedReplica.SrcBranch,
+                        failedReplica.SrcRepo,
+                        failedReplica.SrcServer,
+                        failedReplica.DstRepo,
+                        failedReplica.DstServer));
+            }
+
+            emailSender.SendErrorEmail(subject, body.ToString());
         }
 
         const string HELP =
