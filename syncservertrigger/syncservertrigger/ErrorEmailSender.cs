@@ -55,7 +55,6 @@ namespace Codice.SyncServerTrigger
             return result;
         }
 
-        SmtpClient mSmtpClient;
         EmailConfiguration mEmailConfiguration;
     }
 }
