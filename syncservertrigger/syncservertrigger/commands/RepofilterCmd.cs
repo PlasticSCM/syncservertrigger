@@ -98,7 +98,7 @@ Examples:
     (Adds the 'codice_local' repository to the list of filtered-out repositories,
     so it won't be synced with any of the destination servers.)
 
-    syncservertrigger repofilter remove codice_local
+    syncservertrigger repofilter delete codice_local
     (Removes the 'codice_local' repository from the filtered-out repositories,
     so it will be synced with the destination servers.)
 

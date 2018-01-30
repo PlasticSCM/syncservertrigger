@@ -150,7 +150,7 @@ Examples:
     syncservertrigger server add ssl://diana.mydomain:8088
     (Adds the specified server to the list of destination servers.)
 
-    syncservertrigger server remove ssl://diana.mydomain:8088
+    syncservertrigger server delete ssl://diana.mydomain:8088
     (Removes the specified server from the list of destination servers.)
 
 Remarks:
@@ -181,14 +181,14 @@ Examples:
     (Adds the 'codice_local' repository to the list of filtered-out repositories,
     so it won't be synced with any of the destination servers.)
 
-    syncservertrigger repofilter remove codice_local
+    syncservertrigger repofilter delete codice_local
     (Removes the 'codice_local' repository from the filtered-out repositories,
     so it will be synced with the destination servers.)
 
 Remarks:
     By default, all of the local repositories are synchronized,
     including new ones.You have to manually add a repository to the filter list
-    if you don't want it to be synced. The 'remove' command only applies for
+    if you don't want it to be synced. The 'delete' command only applies for
     filtered repositories, to re-admit them in the synchronization process.
 
 
@@ -211,7 +211,7 @@ Examples:
     (Maps the 'codice_local' source repository to the 'codice' destination
     repository only for the 'skull:9097' destination server.)
 
-    synservertrigger repomap remove codice_local codice@skull:9097
+    synservertrigger repomap delete codice_local codice@skull:9097
     (Removes the mapping between the source repository 'codice_local' and the
     destination repository 'codice' only for the 'skull:9097' destination server.)
 
@@ -232,10 +232,12 @@ warnemail       Used to configure the warning email notifications when
                 synchronization fails.
 
 Usage:
-    syncservertrigger warnemail <<configure> | <add|remove> <email>>
+    syncservertrigger warnemail <configure | list | <add|delete> email>
 
     configure   Enters the configuration wizard, to configure the email account
                 from which the notifications should be sent.
+    list        Lists the destination email addresses that receive
+                notifications.
     add         Adds a destination email address to receive notifications.
     delete      Deletes a destination email address to receive notifications.
     email       Specifies the detination email address to add or remove from the
@@ -249,7 +251,7 @@ Examples:
     as plain text. However, the cypher is reversible, so don't use this on a
     machine you don't trust to be secure.)
 
-    synservertrigger add sluisp @somedomain.org
+    synservertrigger add sluisp@somedomain.org
     (Adds the 'sluisp@somedomain.org' to the recipients of warning emails
     regarding synchronization.)
 

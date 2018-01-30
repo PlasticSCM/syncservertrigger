@@ -37,9 +37,9 @@ namespace Codice.SyncServerTrigger.Commands
                 return;
             }
 
-            if (args.Length == 3 && args[1] == "remove")
+            if (args.Length == 3 && args[1] == "delete")
             {
-                RemoveDestinationAddress(args[2]);
+                DeleteDestinationAddress(args[2]);
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace Codice.SyncServerTrigger.Commands
                 destinationAddress);
         }
 
-        void RemoveDestinationAddress(string destinationAddress)
+        void DeleteDestinationAddress(string destinationAddress)
         {
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             EmailConfiguration emailConfig = toolConfig.EmailConfig;
@@ -103,7 +103,7 @@ namespace Codice.SyncServerTrigger.Commands
                 synchronization fails.
 
 Usage:
-    syncservertrigger warnemail <<configure> | <list> | <add|remove> <email>>
+    syncservertrigger warnemail <configure | list | <add|delete> email>
 
     configure   Enters the configuration wizard, to configure the email account
                 from which the notifications should be sent.
@@ -122,7 +122,7 @@ Examples:
     as plain text. However, the cypher is reversible, so don't use this on a
     machine you don't trust to be secure.)
 
-    synservertrigger add sluisp @somedomain.org
+    synservertrigger add sluisp@somedomain.org
     (Adds the 'sluisp@somedomain.org' to the recipients of warning emails
     regarding synchronization.)
 

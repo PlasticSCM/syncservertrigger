@@ -114,7 +114,7 @@ Examples:
     (Maps the 'codice_local' source repository to the 'codice' destination
     repository only for the 'skull:9097' destination server.)
 
-    synservertrigger repomap remove codice_local codice @skull:9097
+    synservertrigger repomap delete codice_local codice @skull:9097
     (Removes the mapping between the source repository 'codice_local' and the
     destination repository 'codice' only for the 'skull:9097' destination server.)
 
