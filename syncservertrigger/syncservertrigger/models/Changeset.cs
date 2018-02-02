@@ -61,6 +61,6 @@ namespace Codice.SyncServerTrigger.Models
         // From https://www.plasticscm.com/documentation/triggers/plastic-scm-version-control-triggers-guide.shtml#Checkin
         // cs:<id>@br:/<brName>@rep:<repName>@repserver:<repServer>
         static readonly Regex SPEC_REGEX = new Regex(
-            @"cs:(?<id>[1-9]+)\@br:(?<brName>.+)\@rep:(?<repName>.+)\@repserver:(?<repServer>.+)");
+            @"cs:(?<id>[0-9]+)\@br:(?<brName>.+)\@rep:(?<repName>.+)\@repserver:(?<repServer>.+)");
     }
 }
