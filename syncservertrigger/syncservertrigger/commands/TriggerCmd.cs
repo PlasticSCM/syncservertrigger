@@ -63,7 +63,16 @@ namespace Codice.SyncServerTrigger.Commands
                 Environment.Exit(1);
             }
 
-            BuildSyncServerTriggerProcess(runArgs).Start();
+            Process p = BuildSyncServerTriggerProcess(runArgs);
+            try
+            {
+                p.Start();
+            }
+            finally
+            {
+                p.Close();
+                p.Dispose();
+            }
         }
 
         static Process BuildSyncServerTriggerProcess(string runArgs)
@@ -72,7 +81,8 @@ namespace Codice.SyncServerTrigger.Commands
                 ? BuildSyncServerTriggerProcessForWindows(runArgs)
                 : BuildSyncServerTriggerProcessForUnixLike(runArgs);
 
-            result.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            result.StartInfo.CreateNoWindow = true;
+            result.StartInfo.UseShellExecute = false;
             return result;
         }
 
