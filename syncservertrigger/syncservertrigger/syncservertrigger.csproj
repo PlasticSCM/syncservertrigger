@@ -60,6 +60,7 @@
     <Compile Include="ConsoleUtils.cs" />
     <Compile Include="Crypto.cs" />
     <Compile Include="ErrorEmailSender.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="models\Branch.cs" />
     <Compile Include="models\Changeset.cs" />
     <Compile Include="models\Replica.cs" />
