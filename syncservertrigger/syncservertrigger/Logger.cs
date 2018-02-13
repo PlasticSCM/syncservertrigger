@@ -5,24 +5,30 @@ namespace Codice.SyncServerTrigger
 {
     internal static class Logger
     {
-        internal static void InitializeLoggerFile(string installationPath)
+        internal static void InitializeLoggerFile(string destinationDirectory)
         {
             try
             {
-                string folder = Path.Combine(installationPath, "logs");
-
-                if (!Directory.Exists(folder))
-                    Directory.CreateDirectory(folder);
-
-                int pid = System.Diagnostics.Process.GetCurrentProcess().Id;
+                if (!Directory.Exists(destinationDirectory))
+                    Directory.CreateDirectory(destinationDirectory);
 
                 mLogFilePath = Path.Combine(
-                    folder, string.Format("gmaster-install.{0}.log", pid));
+                    destinationDirectory,
+                    $"{DateTime.Now.ToString("yyyy-MM-dd")}.log.txt");
             }
-            catch
-            {
-                // if log fails, there is nothing more to do :-S
-            }
+            catch { }
+        }
+
+        internal static void LogError(string message)
+        {
+            if (mLogFilePath == null)
+                return;
+
+            AppendLog(
+                string.Format("{0} - ERROR - {1}{2}",
+                    DateTime.Now,
+                    message,
+                    Environment.NewLine));
         }
 
         internal static void LogException(string message, Exception e)
@@ -31,7 +37,7 @@ namespace Codice.SyncServerTrigger
                 return;
 
             AppendLog(
-                string.Format("{0} - ERROR - {1}. Exception:{2}{3}{4}{5}",
+                string.Format("{0} - EXCEPTION - {1}. Exception:{2}{3}{4}{5}",
                     DateTime.Now,
                     message,
                     e.Message,
@@ -58,10 +64,7 @@ namespace Codice.SyncServerTrigger
             {
                 File.AppendAllText(mLogFilePath, message);
             }
-            catch
-            {
-                // if log fails, there is nothing more to do :-S
-            }
+            catch { }
         }
 
         static string mLogFilePath = null;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Codice.SyncServerTrigger.Commands;
+using Codice.SyncServerTrigger.Configuration;
 
 namespace Codice.SyncServerTrigger
 {
@@ -16,6 +17,7 @@ namespace Codice.SyncServerTrigger
             }
 
             mCommands = InitializeCommands();
+            InitializeLogging();
 
             ICmd command;
             if (!mCommands.TryGetValue(args[0], out command))
@@ -25,6 +27,17 @@ namespace Codice.SyncServerTrigger
             }
 
             command.Execute(args);
+        }
+
+        static void InitializeLogging()
+        {
+            ToolConfiguration toolConfig = ToolConfiguration.Load();
+            LoggingConfiguration loggingConfig = toolConfig.LoggingConfig;
+
+            if (!loggingConfig.Enabled)
+                return;
+
+            Logger.InitializeLoggerFile(loggingConfig.DestinationPath);
         }
 
         static Dictionary<string, ICmd> InitializeCommands()
