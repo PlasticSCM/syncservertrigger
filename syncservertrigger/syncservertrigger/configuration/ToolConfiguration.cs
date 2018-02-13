@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.Security.Cryptography;
 using Codice.SyncServerTrigger.Models;
 
 namespace Codice.SyncServerTrigger.Configuration
@@ -63,6 +63,15 @@ namespace Codice.SyncServerTrigger.Configuration
             }
         }
 
+        internal LoggingConfiguration LoggingConfig
+        {
+            get
+            {
+                return new LoggingConfiguration(
+                    mConfigFile.GetSection(LOGGING_CONFIG_SECTION_NAME));
+            }
+        }
+
         internal void Save()
         {
             mConfigFile.Save();
@@ -104,6 +113,7 @@ namespace Codice.SyncServerTrigger.Configuration
         const string REPO_FILTER_SECTION_NAME = "repofilters";
         const string REPO_MAP_SECTION_NAME = "repomappings";
         const string EMAIL_CONFIG_SECTION_NAME = "email";
+        const string LOGGING_CONFIG_SECTION_NAME = "logging";
     }
 
     internal class RuntimeConfiguration
@@ -295,5 +305,35 @@ namespace Codice.SyncServerTrigger.Configuration
         const string EMAIL_KEY = "email";
         const string PASSWORD_KEY = "password";
         const string DESTINATION_EMAILS_KEY = "destinationemails";
+    }
+
+    internal class LoggingConfiguration
+    {
+        public LoggingConfiguration(ConfigurationSection section)
+        {
+            mSection = section;
+        }
+
+        public bool Enabled
+        {
+            get { return mSection.GetBool(ENABLED_KEY, false); }
+            set { mSection.SetBool(ENABLED_KEY, value); }
+        }
+
+        public string DestinationPath
+        {
+            get
+            {
+                string path = mSection.GetString(DESTINATION_PATH_KEY, PlatformUtils.HomePath);
+                return string.IsNullOrEmpty(path) // default value only works for undefined keys
+                    ? PlatformUtils.HomePath
+                    : path;
+            }
+            set { mSection.SetString(DESTINATION_PATH_KEY, value); }
+        }
+        
+        ConfigurationSection mSection;
+        const string ENABLED_KEY = "enabled";
+        const string DESTINATION_PATH_KEY = "destination_path";
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="cmdrunner\LaunchCommand.cs" />
     <Compile Include="commands\ICmd.cs" />
     <Compile Include="commands\InstallCmd.cs" />
+    <Compile Include="commands\LoggingCmd.cs" />
     <Compile Include="commands\RepofilterCmd.cs" />
     <Compile Include="commands\RepomapCmd.cs" />
     <Compile Include="commands\RunCmd.cs" />

@@ -56,6 +56,9 @@ namespace Codice.SyncServerTrigger
             cmd = new WarnEmailCmd();
             result.Add(cmd.CommandName, cmd);
 
+            cmd = new LoggingCmd();
+            result.Add(cmd.CommandName, cmd);
+            
             return result;
         }
 
