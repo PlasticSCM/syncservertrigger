@@ -25,6 +25,11 @@ namespace Codice.SyncServerTrigger.Models
             DstServer = dstServer;
         }
 
+        public override string ToString()
+        {
+            return $"br:/{SrcBranch}@{SrcRepo}@{SrcServer} --> {DstRepo}@{DstServer}";
+        }
+
         public static List<Replica> BuildPendingReplicas(
             string srcBranch,
             string srcRepo,

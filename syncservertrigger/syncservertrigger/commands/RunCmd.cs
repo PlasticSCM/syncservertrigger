@@ -17,9 +17,12 @@ namespace Codice.SyncServerTrigger.Commands
         {
             if (args.Length == 1 || args.Length > 5)
             {
-                Console.Error.WriteLine(HELP);
+                Logger.LogError(
+                    $"RunCmd executed with wrong parameters: {string.Join(", ", args)}");
                 Environment.Exit(1);
             }
+
+            Logger.LogInfo("Started running...");
 
             ToolConfiguration toolConfig = ToolConfiguration.Load();
             List<string> filteredRepos = toolConfig.RepoFilterConfig.GetFilteredRepos();
@@ -81,7 +84,7 @@ namespace Codice.SyncServerTrigger.Commands
             string csetSpecs,
             ErrorEmailSender emailSender)
         {
-            Console.WriteLine("Running as after-checkin trigger...");
+            Logger.LogInfo("Running as after-checkin trigger...");
 
             List<Changeset> csets =
                 Changeset.ParsePlasticChangesetEnvironVar(csetSpecs);
@@ -100,9 +103,8 @@ namespace Codice.SyncServerTrigger.Commands
                         mappings));
             }
 
-            Console.WriteLine(
-                "Found {0} destinations to replicate to.",
-                pendingReplicas.Count);
+            Logger.LogInfo(
+                $"Found {pendingReplicas.Count} destinations to replicate to.");
 
             List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
@@ -124,7 +126,7 @@ namespace Codice.SyncServerTrigger.Commands
             string branchSpec,
             ErrorEmailSender emailSender)
         {
-            Console.WriteLine("Running as after-replicationwrite trigger...");
+            Logger.LogInfo("Running as after-replicationwrite trigger...");
 
             Branch branchToReplicate =
                 Branch.ParsePlasticBranchEnvironVar(branchSpec);
@@ -138,9 +140,8 @@ namespace Codice.SyncServerTrigger.Commands
                     dstServers,
                     mappings);
 
-            Console.WriteLine(
-                "Found {0} destinations to replicate to.",
-                pendingReplicas.Count);
+            Logger.LogInfo(
+                $"Found {pendingReplicas.Count} destinations to replicate to.");
 
             List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
@@ -164,7 +165,7 @@ namespace Codice.SyncServerTrigger.Commands
             string serverName,
             ErrorEmailSender emailSender)
         {
-            Console.WriteLine("Running as after-makelabel trigger...");
+            Logger.LogInfo("Running as after-makelabel trigger...");
 
             Branch branchToReplicate = null;
             if (!FindBranchForLabel(
@@ -182,9 +183,8 @@ namespace Codice.SyncServerTrigger.Commands
                     dstServers,
                     mappings);
 
-            Console.WriteLine(
-                "Found {0} destinations to replicate to.",
-                pendingReplicas.Count);
+            Logger.LogInfo(
+                $"Found {pendingReplicas.Count} destinations to replicate to.");
 
             List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
@@ -208,7 +208,7 @@ namespace Codice.SyncServerTrigger.Commands
             string serverName,
             ErrorEmailSender emailSender)
         {
-            Console.WriteLine("Running as after-chattvalue trigger...");
+            Logger.LogInfo("Running as after-chattvalue trigger...");
 
             string objectSpec = triggerStdIn.Substring(
                 startIndex: 0,
@@ -253,9 +253,8 @@ namespace Codice.SyncServerTrigger.Commands
                     dstServers,
                     mappings);
 
-            Console.WriteLine(
-                "Found {0} destinations to replicate to.",
-                pendingReplicas.Count);
+            Logger.LogInfo(
+                $"Found {pendingReplicas.Count} destinations to replicate to.");
 
             List<Replica> failedReplicas = new List<Replica>();
             foreach (Replica pendingReplica in pendingReplicas)
@@ -285,11 +284,14 @@ namespace Codice.SyncServerTrigger.Commands
                 repositoryName,
                 serverName);
 
-            Console.WriteLine(
-                "Searching for the branch of the label {0} on repository {1}@{2}",
-                labelName,
-                repositoryName,
-                serverName);
+            Logger.LogInfo(
+                string.Format(
+                    "Searching for the branch of the label {0} on repository {1}@{2}",
+                    labelName,
+                    repositoryName,
+                    serverName));
+
+            Logger.LogInfo($"Executing: '{cmdLine}'");
 
             result = CmdRunner.CmdRunner.ExecuteCommandWithResult(
                 cmdLine,
@@ -300,19 +302,21 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (result == 0 && !string.IsNullOrEmpty(stdOut))
             {
+                Logger.LogInfo("Label search succeeded.");
                 branch = Branch.ParsePlasticBranchEnvironVar(stdOut.Trim());
                 return true;
             }
 
-            Console.Error.WriteLine(
-                "Searching for the branch containing a label failed.{0}" +
-                "Command line: {1}{0}" +
-                "cm stdout: {2}{0}" +
-                "cm stderr: {3}{0}",
-                Environment.NewLine,
-                cmdLine,
-                stdOut,
-                stdErr);
+            Logger.LogError(
+                string.Format(
+                    "Searching for the branch containing a label failed.{0}" +
+                    "Command line: {1}{0}" +
+                    "cm stdout: {2}{0}" +
+                    "cm stderr: {3}{0}",
+                    Environment.NewLine,
+                    cmdLine,
+                    stdOut,
+                    stdErr));
 
             branch = null;
             return false;
@@ -333,11 +337,14 @@ namespace Codice.SyncServerTrigger.Commands
                 repositoryName,
                 serverName);
 
-            Console.WriteLine(
-                "Searching for the branch of the changeset {0} on repository {1}@{2}",
-                changesetId,
-                repositoryName,
-                serverName);
+            Logger.LogInfo(
+                string.Format(
+                    "Searching for the branch of the changeset {0} on repository {1}@{2}",
+                    changesetId,
+                    repositoryName,
+                    serverName));
+
+            Logger.LogInfo($"Executing: '{cmdLine}'");
 
             result = CmdRunner.CmdRunner.ExecuteCommandWithResult(
                 cmdLine,
@@ -348,19 +355,21 @@ namespace Codice.SyncServerTrigger.Commands
 
             if (result == 0 && !string.IsNullOrEmpty(stdOut))
             {
+                Logger.LogInfo("Branch search succeeded.");
                 branch = Branch.ParsePlasticBranchEnvironVar(stdOut.Trim());
                 return true;
             }
 
-            Console.Error.WriteLine(
-                "Searching for the branch containing a changeset failed.{0}" +
-                "Command line: {1}{0}" +
-                "cm stdout: {2}{0}" +
-                "cm stderr: {3}{0}",
-                Environment.NewLine,
-                cmdLine,
-                stdOut,
-                stdErr);
+            Logger.LogError(
+                string.Format(
+                    "Searching for the branch containing a changeset failed.{0}" +
+                    "Command line: {1}{0}" +
+                    "cm stdout: {2}{0}" +
+                    "cm stderr: {3}{0}",
+                    Environment.NewLine,
+                    cmdLine,
+                    stdOut,
+                    stdErr));
 
             branch = null;
             return false;
@@ -371,13 +380,7 @@ namespace Codice.SyncServerTrigger.Commands
             int result;
             string stdOut, stdErr;
 
-            Console.WriteLine(
-                "Replicating br:{0}@{1}@{2} to {3}@{4}",
-                replica.SrcBranch,
-                replica.SrcRepo,
-                replica.SrcServer,
-                replica.DstRepo,
-                replica.DstServer);
+            Logger.LogInfo($"Replicating {replica}");
 
             string cmdLine = string.Format(
                 "cm replicate --push \"br:{0}@{1}@{2}\" {3}@{4}",
@@ -387,6 +390,8 @@ namespace Codice.SyncServerTrigger.Commands
                 replica.DstRepo,
                 replica.DstServer);
 
+            Logger.LogInfo($"Executing: '{cmdLine}'");
+
             result = CmdRunner.CmdRunner.ExecuteCommandWithResult(
                 cmdLine,
                 Environment.CurrentDirectory,
@@ -395,17 +400,21 @@ namespace Codice.SyncServerTrigger.Commands
                 false);
 
             if (result == 0)
+            {
+                Logger.LogInfo("The replication process succeeded.");
                 return true;
+            }
 
-            Console.Error.WriteLine(
-                "Replicating a branch failed.{0}" +
-                "Command line: '{1}'{0}" +
-                "cm stdout: {2}{0}" +
-                "cm stderr: {3}{0}",
-                Environment.NewLine,
-                cmdLine,
-                stdOut,
-                stdErr);
+            Logger.LogError(
+                string.Format(
+                    "Replicating a branch failed.{0}" +
+                    "Command line: '{1}'{0}" +
+                    "cm stdout: {2}{0}" +
+                    "cm stderr: {3}{0}",
+                    Environment.NewLine,
+                    cmdLine,
+                    stdOut,
+                    stdErr));
 
             return false;
         }
@@ -437,7 +446,10 @@ namespace Codice.SyncServerTrigger.Commands
                         failedReplica.DstServer));
             }
 
-            emailSender.SendErrorEmail(subject, body.ToString());
+            string message = body.ToString();
+
+            Logger.LogError(message);
+            emailSender.SendErrorEmail(subject, message);
         }
 
         const string HELP =
