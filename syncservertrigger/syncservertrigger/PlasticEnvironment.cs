@@ -8,7 +8,9 @@ namespace Codice.SyncServerTrigger
         {
             get
             {
-                return Environment.GetEnvironmentVariable("PLASTIC_CHANGESET");
+                string result = Environment.GetEnvironmentVariable("PLASTIC_CHANGESET");
+                Logger.LogInfo($"$PLASTIC_CHANGESET value: {result}");
+                return result;
             }
         }
 
@@ -16,7 +18,9 @@ namespace Codice.SyncServerTrigger
         {
             get
             {
-                return Environment.GetEnvironmentVariable("PLASTIC_BRANCH");
+                string result = Environment.GetEnvironmentVariable("PLASTIC_BRANCH");
+                Logger.LogInfo($"$PLASTIC_BRANCH value: {result}");
+                return result;
             }
         }
 
@@ -24,7 +28,9 @@ namespace Codice.SyncServerTrigger
         {
             get
             {
-                return Environment.GetEnvironmentVariable("PLASTIC_LABEL_NAME");
+                string result = Environment.GetEnvironmentVariable("PLASTIC_LABEL_NAME"); 
+                Logger.LogInfo($"$PLASTIC_LABEL_NAME value: {result}");
+                return result;
             }
         }
 
@@ -32,7 +38,9 @@ namespace Codice.SyncServerTrigger
         {
             get
             {
-                return Environment.GetEnvironmentVariable("PLASTIC_REPOSITORY_NAME");
+                string result = Environment.GetEnvironmentVariable("PLASTIC_REPOSITORY_NAME");
+                Logger.LogInfo($"$PLASTIC_REPOSITORY_NAME value: {result}");
+                return result;
             }
         }
 
@@ -40,7 +48,9 @@ namespace Codice.SyncServerTrigger
         {
             get
             {
-                return Environment.GetEnvironmentVariable("PLASTIC_SERVER");
+                string result = Environment.GetEnvironmentVariable("PLASTIC_SERVER");
+                Logger.LogInfo($"PLASTIC_SERVER value: {result}");
+                return result;
             }
         }
     }
