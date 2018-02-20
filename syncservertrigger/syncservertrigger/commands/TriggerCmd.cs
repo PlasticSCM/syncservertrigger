@@ -82,7 +82,7 @@ namespace Codice.SyncServerTrigger.Commands
                 : BuildSyncServerTriggerProcessForUnixLike(runArgs);
 
             result.StartInfo.CreateNoWindow = true;
-            result.StartInfo.UseShellExecute = false;
+            result.StartInfo.UseShellExecute = true;
             return result;
         }
 
