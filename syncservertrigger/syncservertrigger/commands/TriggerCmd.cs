@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 
+using Mono.Unix.Native;
+
 using Codice.SyncServerTrigger.Configuration;
 using Codice.SyncServerTrigger.Models;
 
@@ -63,6 +65,9 @@ namespace Codice.SyncServerTrigger.Commands
                 Environment.Exit(1);
             }
 
+            if (PlatformUtils.CurrentPlatform != Platform.Windows)
+                DettachFromStdIO();
+
             Process p = BuildSyncServerTriggerProcess(runArgs);
             try
             {
@@ -73,6 +78,13 @@ namespace Codice.SyncServerTrigger.Commands
                 p.Close();
                 p.Dispose();
             }
+        }
+
+        static void DettachFromStdIO()
+        {
+            Stdlib.fclose(Stdlib.stdin);
+            Stdlib.fclose(Stdlib.stdout);
+            Stdlib.fclose(Stdlib.stderr);
         }
 
         static Process BuildSyncServerTriggerProcess(string runArgs)
