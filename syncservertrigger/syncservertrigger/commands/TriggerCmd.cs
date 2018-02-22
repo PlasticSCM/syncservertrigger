@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 
+#if MONO
 using Mono.Unix.Native;
+#endif
 
 using Codice.SyncServerTrigger.Configuration;
 using Codice.SyncServerTrigger.Models;
@@ -65,8 +67,10 @@ namespace Codice.SyncServerTrigger.Commands
                 Environment.Exit(1);
             }
 
+#if MONO
             if (PlatformUtils.CurrentPlatform != Platform.Windows)
                 DettachFromStdIO();
+#endif
 
             Process p = BuildSyncServerTriggerProcess(runArgs);
             try
@@ -80,12 +84,14 @@ namespace Codice.SyncServerTrigger.Commands
             }
         }
 
+#if MONO
         static void DettachFromStdIO()
         {
             Stdlib.fclose(Stdlib.stdin);
             Stdlib.fclose(Stdlib.stdout);
             Stdlib.fclose(Stdlib.stderr);
         }
+#endif
 
         static Process BuildSyncServerTriggerProcess(string runArgs)
         {
