@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-
 #if MONO
 using Mono.Unix.Native;
 #endif
-
 using Codice.SyncServerTrigger.Configuration;
 using Codice.SyncServerTrigger.Models;
 
@@ -67,12 +65,17 @@ namespace Codice.SyncServerTrigger.Commands
                 Environment.Exit(1);
             }
 
+            // IMPORTANT: Build the process BEFORE dettaching from StdIO.
+            Process p = BuildSyncServerTriggerProcess(runArgs);
+
 #if MONO
             if (PlatformUtils.CurrentPlatform != Platform.Windows)
+            {
+                Logger.LogInfo("Dettaching from stdio.");
                 DettachFromStdIO();
+            }
 #endif
 
-            Process p = BuildSyncServerTriggerProcess(runArgs);
             try
             {
                 p.Start();
@@ -87,9 +90,16 @@ namespace Codice.SyncServerTrigger.Commands
 #if MONO
         static void DettachFromStdIO()
         {
-            Stdlib.fclose(Stdlib.stdin);
-            Stdlib.fclose(Stdlib.stdout);
-            Stdlib.fclose(Stdlib.stderr);
+            try
+            {
+                Stdlib.fclose(Stdlib.stdin);
+                Stdlib.fclose(Stdlib.stdout);
+                Stdlib.fclose(Stdlib.stderr);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogException("Could not dettach from stdio.", ex);
+            }
         }
 #endif
 
@@ -99,7 +109,6 @@ namespace Codice.SyncServerTrigger.Commands
                 ? BuildSyncServerTriggerProcessForWindows(runArgs)
                 : BuildSyncServerTriggerProcessForUnixLike(runArgs);
 
-            result.StartInfo.CreateNoWindow = true;
             result.StartInfo.UseShellExecute = true;
             return result;
         }
