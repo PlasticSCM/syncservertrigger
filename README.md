@@ -18,7 +18,7 @@ This way, every time one of the following things happens...:
 ...the server will automatically fire the trigger, and the trigger will push the new changes from the source server to the server(s) specified in the configuration!
 
 ------
-## Downloading instructions
+## How to Download
 You can download the trigger from the [releases section](https://github.com/PlasticSCM/syncservertrigger/releases) of this repository.
 If you want to, you can clone it, and building both from Visual Studio, or using `msbuild` (Windows) or `xbuild` (GNU/Linux & macOS). 
 
