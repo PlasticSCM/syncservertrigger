@@ -34,10 +34,10 @@ namespace Codice.SyncServerTrigger.Commands
 
             string[] triggerNames =
             {
-                TriggerNames.AfterCi,
-                TriggerNames.AfterReplication,
-                TriggerNames.AfterMkLabel,
-                TriggerNames.AfterChAtt
+                Trigger.Names.AfterCi,
+                Trigger.Names.AfterRW,
+                Trigger.Names.AfterMkLb,
+                Trigger.Names.AfterChAttVal
             };
 
             triggers.RemoveAll(trigger => !triggerNames.Contains(trigger.Name));

@@ -5,6 +5,22 @@ namespace Codice.SyncServerTrigger.Models
 {
     internal class Trigger
     {
+        internal static class Names
+        {
+            internal const string AfterCi = "sync-afterci";
+            internal const string AfterRW = "sync-afterreplication";
+            internal const string AfterMkLb = "sync-aftermklabel";
+            internal const string AfterChAttVal = "sync-afterchatt";
+        }
+
+        internal static class Types
+        {
+            internal const string AfterCi = "after-checkin";
+            internal const string AfterRW = "after-replicationwrite";
+            internal const string AfterMkLb = "after-mklabel";
+            internal const string AfterChAttVal = "after-chattvalue";
+        }
+
         // From 'cm listtriggers --help'
         // {0} -> Position
         // {1} -> Name
@@ -13,14 +29,6 @@ namespace Codice.SyncServerTrigger.Models
         // {4} -> Type
         // {5} -> Filter
         internal const string CM_FORMAT = "{0}#{1}#{2}#{3}#{4}#{5}";
-
-        internal static class Names
-        {
-            internal const string AfterCi = "after-checkin";
-            internal const string AfterRW = "after-replicationwrite";
-            internal const string AfterMkLb = "after-mklabel";
-            internal const string AfterChAttVal = "after-chattvalue";
-        }
 
         internal int Position { get; private set; }
         internal string Name { get; private set; }

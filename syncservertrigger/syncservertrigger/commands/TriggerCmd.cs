@@ -23,37 +23,37 @@ namespace Codice.SyncServerTrigger.Commands
             }
 
             string runArgs = string.Empty;
-            if (args.Length == 2 && args[1] == Trigger.Names.AfterCi)
+            if (args.Length == 2 && args[1] == Trigger.Types.AfterCi)
             {
                 runArgs = string.Format(
                     "run {0} \"{1}\"",
-                    Trigger.Names.AfterCi,
+                    Trigger.Types.AfterCi,
                     PlasticEnvironment.PlasticChangeset);
             }
 
-            if (args.Length == 2 && args[1] == Trigger.Names.AfterRW)
+            if (args.Length == 2 && args[1] == Trigger.Types.AfterRW)
             {
                 runArgs = string.Format(
                     "run {0} \"{1}\"",
-                    Trigger.Names.AfterRW,
+                    Trigger.Types.AfterRW,
                     PlasticEnvironment.PlasticBranch);
             }
 
-            if (args.Length == 2 && args[1] == Trigger.Names.AfterMkLb)
+            if (args.Length == 2 && args[1] == Trigger.Types.AfterMkLb)
             {
                 runArgs = string.Format(
                     "run {0} \"{1}\" \"{2}\" \"{3}\"",
-                    Trigger.Names.AfterMkLb,
+                    Trigger.Types.AfterMkLb,
                     PlasticEnvironment.PlasticLabelName,
                     PlasticEnvironment.PlasticRepositoryName,
                     PlasticEnvironment.PlasticServer);
             }
 
-            if (args.Length == 2 && args[1] == Trigger.Names.AfterChAttVal)
+            if (args.Length == 2 && args[1] == Trigger.Types.AfterChAttVal)
             {
                 runArgs = string.Format(
                     "run {0} \"{1}\" \"{2}\" \"{3}\"",
-                    Trigger.Names.AfterChAttVal,
+                    Trigger.Types.AfterChAttVal,
                     Utils.ReadStdInToEnd(),
                     PlasticEnvironment.PlasticRepositoryName,
                     PlasticEnvironment.PlasticServer);

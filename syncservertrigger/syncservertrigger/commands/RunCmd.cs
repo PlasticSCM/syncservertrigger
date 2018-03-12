@@ -32,7 +32,7 @@ namespace Codice.SyncServerTrigger.Commands
             ErrorEmailSender emailSender =
                 new ErrorEmailSender(toolConfig.EmailConfig);
 
-            if (args.Length == 3 && args[1] == Trigger.Names.AfterCi)
+            if (args.Length == 3 && args[1] == Trigger.Types.AfterCi)
             {
                 RunAfterCheckin(
                     filteredRepos,
@@ -42,7 +42,7 @@ namespace Codice.SyncServerTrigger.Commands
                     emailSender);
             }
 
-            if (args.Length == 3 && args[1] == Trigger.Names.AfterRW)
+            if (args.Length == 3 && args[1] == Trigger.Types.AfterRW)
             {
                 RunAfterReplicationWrite(
                     filteredRepos,
@@ -52,7 +52,7 @@ namespace Codice.SyncServerTrigger.Commands
                     emailSender);
             }
 
-            if (args.Length == 5 && args[1] == Trigger.Names.AfterMkLb)
+            if (args.Length == 5 && args[1] == Trigger.Types.AfterMkLb)
             {
                 RunAfterMakeLabel(
                     filteredRepos,
@@ -64,7 +64,7 @@ namespace Codice.SyncServerTrigger.Commands
                     emailSender);
             }
 
-            if (args.Length == 5 && args[1] == Trigger.Names.AfterChAttVal)
+            if (args.Length == 5 && args[1] == Trigger.Types.AfterChAttVal)
             {
                 RunAfterChangeAttributeValue(
                     filteredRepos,

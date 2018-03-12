@@ -5,14 +5,6 @@ using Codice.SyncServerTrigger.Models;
 
 namespace Codice.SyncServerTrigger.Commands
 {
-    internal static class TriggerNames
-    {
-        internal const string AfterCi = "sync-afterci";
-        internal const string AfterReplication = "sync-afterreplication";
-        internal const string AfterMkLabel = "sync-aftermklabel";
-        internal const string AfterChAtt = "sync-afterchatt";
-    }
-
     internal class InstallCmd : ICmd
     {
         string ICmd.Help { get { return HELP; } }
@@ -53,10 +45,10 @@ namespace Codice.SyncServerTrigger.Commands
             if (!PlatformUtils.IsWindows)
                 InitializeMonoRuntimePath();
 
-            if (!InstallTrigger(Trigger.Names.AfterCi, TriggerNames.AfterCi, executablePath, srcServer)
-                || !InstallTrigger(Trigger.Names.AfterRW, TriggerNames.AfterReplication, executablePath, srcServer)
-                || !InstallTrigger(Trigger.Names.AfterMkLb, TriggerNames.AfterMkLabel, executablePath, srcServer)
-                || !InstallTrigger(Trigger.Names.AfterChAttVal, TriggerNames.AfterChAtt, executablePath, srcServer))
+            if (!InstallTrigger(Trigger.Types.AfterCi, Trigger.Names.AfterCi, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Types.AfterRW, Trigger.Names.AfterRW, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Types.AfterMkLb, Trigger.Names.AfterMkLb, executablePath, srcServer)
+                || !InstallTrigger(Trigger.Types.AfterChAttVal, Trigger.Names.AfterChAttVal, executablePath, srcServer))
             {
                 Environment.Exit(1);
             }
