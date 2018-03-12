@@ -69,7 +69,7 @@ namespace Codice.SyncServerTrigger
             cmd = new WarnEmailCmd();
             result.Add(cmd.CommandName, cmd);
 
-            cmd = new LoggingCmd();
+            cmd = new LogCmd();
             result.Add(cmd.CommandName, cmd);
             
             return result;
@@ -273,6 +273,35 @@ Examples:
 
 Remarks:
     Emails are only sent when the synchronization process failed. No news is
-    good news!";
+    good news!
+
+
+
+log             Used to enable or disable the replication log, useful to
+                debug errors in the replication process.
+
+Usage:
+    log <enable [path]| disable | status>
+
+    enable      Enables the logging.
+    path        The destination directory to where the logs should be saved.
+    disable     Disables the logging.
+    status      Shows the current status of the logging.
+
+Examples:
+    log enable
+    (Enables the logging. By default, the log will be saved in the HOME of
+    the user.)
+
+    log enable /home/sluisp/logs/
+    (Enables the logging, and sets the specified directory as the destination
+    directory of the logs.)
+
+    log disable
+    (Disables the logging.)
+
+    log status
+    (Prints the status of the logging -enabled/disabled- and the directory
+    where it is set to be saved.)";
     }
 }

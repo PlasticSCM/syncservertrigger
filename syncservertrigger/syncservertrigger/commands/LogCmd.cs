@@ -5,11 +5,11 @@ using Codice.SyncServerTrigger.Configuration;
 
 namespace Codice.SyncServerTrigger.Commands
 {
-    public class LoggingCmd : ICmd
+    public class LogCmd : ICmd
     {
         string ICmd.Help { get { return HELP; } }
 
-        string ICmd.CommandName { get { return "logging"; } }
+        string ICmd.CommandName { get { return "log"; } }
 
         void ICmd.Execute(string[] args)
         {
@@ -104,16 +104,16 @@ namespace Codice.SyncServerTrigger.Commands
         
 
         const string HELP =
-@"logging         Used to enable or disable the replication log, useful to
+@"log             Used to enable or disable the replication log, useful to
                 debug errors in the replication process.
 
 Usage:
     log <enable [path]| disable | status>
 
-    enable   Enables the logging.
-    path     The destination directory to where the logs should be saved.
-    disable  Disables the logging.
-    status   Shows the current status of the logging.
+    enable      Enables the logging.
+    path        The destination directory to where the logs should be saved.
+    disable     Disables the logging.
+    status      Shows the current status of the logging.
 
 Examples:
     log enable
